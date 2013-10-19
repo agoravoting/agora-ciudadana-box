@@ -64,6 +64,8 @@ package { ['build-essential', 'libxml2-dev', 'libxslt1-dev']:
   ensure => installed
 } ->
 
+notify { 'Running `pip install`. Time for a coffee...': } ->
+
 exec { 'pip_install':
   command => "${as_root} 'pip install -r requirements.txt --upgrade'",
   cwd     => $app_home,
