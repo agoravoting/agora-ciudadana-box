@@ -4,7 +4,7 @@ $as_vagrant   = 'sudo -u vagrant -H bash -l -c'
 $as_root      = 'sudo -H bash -l -c'
 
 Exec {
-  path => ['/usr/sbin', '/usr/bin', '/sbin', '/bin', $app_home]
+  path => ['/usr/sbin', '/usr/bin', '/sbin', '/bin']
 }
 
 # --- apt-get update -----------------------------------------------------------
@@ -67,39 +67,39 @@ package { ['build-essential', 'libxml2-dev', 'libxslt1-dev']:
 notify { 'Running `pip install`. Time for a coffee...': } ->
 
 exec { 'pip_install':
-  command => "${as_root} 'pip install -r requirements.txt --upgrade'",
+  command => 'pip install -r requirements.txt --upgrade',
   cwd     => $app_home,
   timeout => 0,
   creates => "${app_home}/build"
 } ->
 
 exec { 'configure_database':
-  command => 'manage.py syncdb --all',
+  command => "${as_vagrant} ./manage.py syncdb --all",
   cwd     => $app_home
 } ->
 
 exec { 'mark_migrations_as_applied':
-  command => 'manage.py migrate --fake',
+  command => "${as_vagrant} ./manage.py migrate --fake",
   cwd     => $app_home
 } ->
 
 exec { 'rebuild_initial_django_haystack_index':
-  command => 'manage.py rebuild_index --noinput',
+  command => "${as_vagrant} ./manage.py rebuild_index --noinput",
   cwd     => $app_home
 } ->
 
 exec { 'fix_permissions':
-  command => 'manage.py check_permissions',
+  command => "${as_vagrant} ./manage.py check_permissions",
   cwd     => $app_home
 } ->
 
 exec { 'start_celeryd':
-  command => 'manage.py celeryd -l INFO -B -S djcelery.schedulers.DatabaseScheduler &',
+  command => "${as_vagrant} ./manage.py celeryd -l INFO -B -S djcelery.schedulers.DatabaseScheduler &",
   cwd     => $app_home
 } ->
 
 exec { 'start_webserver':
-  command => 'manage.py runserver &',
+  command => "${as_vagrant} ./manage.py runserver &",
   cwd     => $app_home
 } ->
 
