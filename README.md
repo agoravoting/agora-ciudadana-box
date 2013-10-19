@@ -1,11 +1,11 @@
 ### Installation
 
-    host $ git clone git@github.com/agoraciudadana/agora-ciudadana-box.git
+    host $ git clone git@github.com:agoraciudadana/agora-ciudadana-box.git
     host $ cd agora-ciudadana-box
 
 Now you need to clone agora-ciudadana inside the cloned repo:
 
-    host $ git clone git@github.com/agoraciudadana/agora-ciudadana.git
+    host $ git clone git@github.com:agoraciudadana/agora-ciudadana.git
     host $ vagrant up
 
 This folder (`agora-ciudadana-box`) will be mounted at `/vagrant` on the virtual machine.
