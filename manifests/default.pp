@@ -72,27 +72,33 @@ exec { 'pip_install':
 } ->
 
 exec { 'configure_database':
-  command => 'manage.py syncdb --all'
+  command => 'manage.py syncdb --all',
+  cwd     => $app_home
 } ->
 
 exec { 'mark_migrations_as_applied':
-  command => 'manage.py migrate --fake'
+  command => 'manage.py migrate --fake',
+  cwd     => $app_home
 } ->
 
 exec { 'rebuild_initial_django_haystack_index':
-  command => 'manage.py rebuild_index --noinput'
+  command => 'manage.py rebuild_index --noinput',
+  cwd     => $app_home
 } ->
 
 exec { 'fix_permissions':
-  command => 'manage.py check_permissions'
+  command => 'manage.py check_permissions',
+  cwd     => $app_home
 } ->
 
 exec { 'start_celeryd':
-  command => 'manage.py celeryd -l INFO -B -S djcelery.schedulers.DatabaseScheduler &'
+  command => 'manage.py celeryd -l INFO -B -S djcelery.schedulers.DatabaseScheduler &',
+  cwd     => $app_home
 } ->
 
 exec { 'start_webserver':
-  command => 'manage.py runserver &'
+  command => 'manage.py runserver &',
+  cwd     => $app_home
 } ->
 
 # --- Setup services -----------------------------------------------------------
