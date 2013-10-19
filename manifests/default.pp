@@ -99,7 +99,7 @@ exec { 'start_celeryd':
 } ->
 
 exec { 'start_webserver':
-  command => "${as_vagrant} ./manage.py runserver &",
+  command => "${as_vagrant} ./manage.py runserver 0.0.0.0:8000 &",
   cwd     => $app_home
 } ->
 
