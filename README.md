@@ -10,7 +10,7 @@ Now you need to clone agora-ciudadana inside the cloned repo:
 
 This folder (`agora-ciudadana-box`) will be mounted at `/vagrant` on the virtual machine.
 
-Wait for the provisoning to finish, and you will have the service available at `http://localhost:8000/`
+Wait for the provisioning to finish, and you will have the service available at `http://localhost:8000/`
 
 ### Working
 
