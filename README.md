@@ -17,4 +17,18 @@ Wait for the provisioning to finish, and you will have the service available at 
 Now you can work on your `agora-ciudadana-box/agora-ciudadana` folder locally, run tests on the virtual machine,
 and test the service on your navigator.
 
-That's it !!
+### Logging
+
+Logging happens in two places, splitted by `stdout` and `stderr`.
+
+* celeryd
+    * `/tmp/agora-celeryd.log`
+    * `/tmp/agora-celeryd.err`
+
+* webserver
+    * `/tmp/agora-server.log`
+    * `/tmp/agora-server.err`
+
+### Contributing
+
+Fork it, hack it, pull request it!
