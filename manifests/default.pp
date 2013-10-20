@@ -1,5 +1,6 @@
 $home         = '/home/vagrant'
-$app_home     = '/vagrant/agora-ciudadana'
+$vagrant_root = '/vagrant'
+$app_home     = "${vagrant_root}/agora-ciudadana"
 $as_vagrant   = 'sudo -u vagrant -H bash -l -c'
 $as_root      = 'sudo -H bash -l -c'
 
@@ -95,12 +96,12 @@ exec { 'fix_permissions':
 
 exec { 'start_celeryd':
   command => "${as_vagrant} ./start_celeryd.sh",
-  cwd     => $home
+  cwd     => $vagrant_root
 } ->
 
 exec { 'start_webserver':
   command => "${as_vagrant} ./start_webserver.sh",
-  cwd     => $home
+  cwd     => $vagrant_root
 } ->
 
 # --- Setup services -----------------------------------------------------------
