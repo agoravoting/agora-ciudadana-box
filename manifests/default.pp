@@ -47,8 +47,8 @@ package { ['gettext']:
 # --- Installation -------------------------------------------------------------
 
 exec { 'append_virtualenvwrapper_in_profile':
-  command => "echo 'source /etc/bash_completion.d/virtualenvwrapper' >> $home/.profile",
-  unless  => "grep 'virtualenvwrapper' -- $home/.profile"
+  command => "echo 'source /etc/bash_completion.d/virtualenvwrapper' >> ${home}/.profile",
+  unless  => "grep 'virtualenvwrapper' -- ${home}/.profile"
 } ->
 
 exec { 'mkvirtualenv_agora_ciudadana':
@@ -92,6 +92,11 @@ exec { 'rebuild_initial_django_haystack_index':
 exec { 'fix_permissions':
   command => "${as_vagrant} ./manage.py check_permissions",
   cwd     => $app_home
+} ->
+
+exec { 'fix_crispy_template_pack':
+  command => "echo \"CRISPY_TEMPLATE_PACK='bootstrap'\" >> ${app_home}/agora_site/settings.py",
+  unless  => "grep 'CRISPY_TEMPLATE_PACK' -- ${app_home}/agora_site/settings.py"
 } ->
 
 exec { 'start_celeryd':
