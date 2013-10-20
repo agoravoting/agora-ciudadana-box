@@ -94,13 +94,13 @@ exec { 'fix_permissions':
 } ->
 
 exec { 'start_celeryd':
-  command => "${as_vagrant} ./manage.py celeryd -l INFO -B -S djcelery.schedulers.DatabaseScheduler &",
-  cwd     => $app_home
+  command => "${as_vagrant} ./start_celeryd.sh",
+  cwd     => $home
 } ->
 
 exec { 'start_webserver':
-  command => "${as_vagrant} ./manage.py runserver 0.0.0.0:8000 &",
-  cwd     => $app_home
+  command => "${as_vagrant} ./start_webserver.sh",
+  cwd     => $home
 } ->
 
 # --- Setup services -----------------------------------------------------------
