@@ -94,11 +94,6 @@ exec { 'fix_permissions':
   cwd     => $app_home
 } ->
 
-exec { 'fix_crispy_template_pack':
-  command => "echo \"CRISPY_TEMPLATE_PACK='bootstrap'\" >> ${app_home}/agora_site/settings.py",
-  unless  => "grep 'CRISPY_TEMPLATE_PACK' -- ${app_home}/agora_site/settings.py"
-} ->
-
 exec { 'start_celeryd':
   command => "${as_vagrant} ./start_celeryd.sh",
   cwd     => $vagrant_root
