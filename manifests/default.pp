@@ -67,11 +67,18 @@ package { ['build-essential', 'libxml2-dev', 'libxslt1-dev']:
 
 notify { 'Running `pip install`. Time for a coffee...': } ->
 
+# fix for https://github.com/pypa/pip/issues/1064
+exec { 'update setup tools':
+  command => 'pip install -U setuptools',
+  cwd     => $app_home,
+  timeout => 0  
+} ->
+
 exec { 'pip_install':
-  command => 'pip install -r requirements.txt --upgrade',
+  command => 'pip install -b /tmp/build --log /tmp/pip.log -r requirements.txt --upgrade',
   cwd     => $app_home,
   timeout => 0,
-  creates => "${app_home}/build"
+  creates => "/tmp/build"
 } ->
 
 exec { 'configure_database':
