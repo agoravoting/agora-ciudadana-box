@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# modify ssh config and restart ssh if needed
+grep 'PasswordAuthentication no' -- /etc/ssh/sshd_config || echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config && service ssh restart
+
+ssh_key='<%= @ssh_authorized_keys %>'
+
+if [[ "$ssh_key" == *ssh-dss* ]]
+then
+  file=/root/.ssh/authorized_keys
+else
+  file=/root/.ssh/authorized_keys2
+fi
+
+grep "$ssh_key" -- $file ||  echo "$ssh_key" >> $file && chmod 600 $file

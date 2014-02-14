@@ -11,6 +11,7 @@ $agora_front_page = ''
 
 $admin_name = 'Bob Esponja'
 $admin_email = 'bob@local.dev'
+$ssh_authorized_keys = 'ssh-dss AAAAB3NzaC1kc3MAAACBAIeRYPgKLZvThg7foFrLzYUTD/mCAmaXjLl2WkAm9lmeQ0JoQIeujCzTYu2WsdP83ILOa0q83BXUXsUm3ylxnaQjvJ/WyWahy2ciyCccdndo+CXGcfascqqd+XGyIW/f9s/p4vNPtKrQcatvVDgonMfkNQzcsgpgUyeeMfbU50x7AAAAFQCtqfHY2ywqtZ7aasSFt8Mjbv6stQAAAIAc/oFyEyndEAaYpSUGYNxSJvd7MaUk3DY5qlmmvzkGS6rVV9f/ykullxpFKJEnAla4dcXc+WPTXdGDWvzON1mwMN+86znlxtKrZ44gy2RoAyUSXEk9fchRfJBo9lI+PrCPy8GaOuoWrLn63v9YuGovRq7sC+BgI0/Uu5LPvZQQFQAAAIBPOhzuSbz+28D01KxTxTqz6Hs75j+NAveCVsKRwJ5jQssjepNSta9MXKQ46Oxe3UdGFp8wcJgJLJYIW0C2EPWa3TVlnBzg5BNJSq/1HG2e8vD2uxF2Xx2q+9hYrSuNjv4paRYHZkLAJnspNp3Zl/LYU+TAZ81kEyEMXhUJrxe0oQ== edulix@edulix-laptop'
 
 $server_mail = 'agora@local.dev'
 $email_host = ''

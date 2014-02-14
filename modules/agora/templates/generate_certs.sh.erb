@@ -42,15 +42,18 @@ EOF
 fi
 
 # convert
-wget --no-check-certificate  https://www.sede.fnmt.gob.es/documents/11614/66000/Certificado+Raiz+Clase2A/29de1646-675e-49b3-bd8e-0ff6ca02cb66 -O fnmt_ca.cer
-sha1sum=$(sha1sum fnmt_ca.cer)
-
-if [ ! "$sha1sum" == '43f9b110d5bafd48225231b0d0082b372fef9a54  fnmt_ca.cer' ]
+if [ ! -f ca.pem ]
 then
-    echo "invalid fnmt certificate"
-    exit 1
+  wget --no-check-certificate  https://www.sede.fnmt.gob.es/documents/11614/66000/Certificado+Raiz+Clase2A/29de1646-675e-49b3-bd8e-0ff6ca02cb66 -O fnmt_ca.cer
+  sha1sum=$(sha1sum fnmt_ca.cer)
+
+  if [ ! "$sha1sum" == '43f9b110d5bafd48225231b0d0082b372fef9a54  fnmt_ca.cer' ]
+  then
+      echo "invalid fnmt certificate"
+      exit 1
+  fi
+  openssl x509 -inform der -in fnmt_ca.cer -out ca.pem
+  rm fnmt_ca.cer
 fi
-openssl x509 -inform der -in fnmt_ca.cer -out ca.pem
-rm fnmt_ca.cer
 
 exit 0

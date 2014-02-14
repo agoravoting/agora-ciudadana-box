@@ -3,7 +3,7 @@ class agora() {
         path => ['/usr/sbin', '/usr/bin', '/usr/local/bin', '/sbin', '/bin']
     }
 
-    # -- users ---------------------------------------------------------------------
+    # -- users ---------------------------------------------------------------
 
     user { 'agora':
         ensure     => present,
@@ -12,12 +12,12 @@ class agora() {
         shell      => '/bin/bash'
     } ->
 
-    # --- packages -----------------------------------------------------------------
+    # --- packages -----------------------------------------------------------
 
     exec { "apt_get_update":
         command => "apt-get update"
     } ->
-    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl']:
+    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl', 'fail2ban']:
         ensure => present,
     } ->
 
@@ -29,8 +29,15 @@ class agora() {
         ensure => present,
     } ->
 
+    # -- vim -----------------------------------------------------------------
 
-    # --- services -----------------------------------------------------------------
+    exec { 'vim_syntax_on':
+        command => "echo 'syntax on' >> /etc/vim/vimrc",
+        unless  => "grep '^syntax on' -- /etc/vim/vimrc",
+        require => Package['vim'],
+    }
+
+    # --- services -----------------------------------------------------------
 
     service { 'rabbitmq-server':
         ensure => running,
@@ -55,7 +62,40 @@ class agora() {
         restart    => 'supervisorctl reload',
     }
 
-    # --- database -----------------------------------------------------------------
+    service { 'ssh':
+        ensure     => running,
+        enable     => true,
+        hasrestart => true,
+    }
+
+    service { 'fail2ban':
+        ensure     => running,
+        enable     => true,
+        hasrestart => true,
+    }
+
+    # --- ssh configuration --------------------------------------------------
+
+    file {'/root/.ssh':
+        ensure  => directory,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '700',
+    } ->
+
+    file { '/tmp/ssh_setup.sh':
+        ensure  => file,
+        mode    => 'a+x',
+        content => template('agora/ssh_setup.sh.erb'),
+    } ->
+
+    exec { '/tmp/ssh_setup.sh':
+        user      => 'root',
+        logoutput => true,
+        timeout   => 100,
+    } ->
+
+    # --- database -----------------------------------------------------------
 
     file { '/tmp/db_setup.sh':
         ensure  => file,
@@ -69,7 +109,7 @@ class agora() {
         timeout   => 10,
     } ->
 
-    # -- ssl certificate -----------------------------------------------------------
+    # -- ssl certificate -----------------------------------------------------
 
     file {'/var/www/':
         ensure  => directory,
@@ -112,7 +152,7 @@ class agora() {
         timeout   => 100,
     } ->
 
-    # --- Installation -------------------------------------------------------------
+    # --- agora configuration nstallation ------------------------------------
 
     exec { 'append_virtualenvwrapper_in_profile':
         command => "echo 'source /etc/bash_completion.d/virtualenvwrapper' >> /home/agora/.profile",
@@ -208,7 +248,7 @@ class agora() {
         group   => 'www-data',
     } ->
 
-    # --- services files -----------------------------------------------------------
+    # --- services files -----------------------------------------------------
 
     file {'/etc/nginx/nginx.conf':
         ensure  => file,
@@ -235,4 +275,23 @@ class agora() {
         content => template('agora/supervisor_agora_celery.conf.erb'),
         notify  => Service['supervisor'],
     }
+
+    # -- fail2ban conf -------------------------------------------------------
+
+    file { '/etc/fail2ban/filter.d/nginx-limitreq.conf':
+        ensure  => file,
+        content => template('agora/fail2ban/nginx-limitreq.conf.erb'),
+    } ->
+
+    file { '/etc/fail2ban/filter.d/nginx-http-auth.conf':
+        ensure  => file,
+        content => template('agora/fail2ban/nginx-http-auth.conf.erb'),
+    } ->
+
+    file { '/etc/fail2ban/jail.conf':
+        ensure  => file,
+        content => template('agora/fail2ban/jail.conf.erb'),
+        notify  => Service['fail2ban'],
+    }
+
 }
