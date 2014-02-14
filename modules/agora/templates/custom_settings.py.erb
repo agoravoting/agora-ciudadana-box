@@ -20,6 +20,93 @@ SITE_NAME = "<%= @site_name %>"
 
 AGORA_CREATION_PERMISSIONS="superusers-only"
 
+
+
+
+###### for varnish
+
+USE_ESI = True
+
+<% if @enable_varnish == 'true' %>
+
+# sets default value for max age in cache
+CACHE_MIDDLEWARE_SECONDS = 60
+
+# sets the max age for calls that do not need to be very updated
+MANY_CACHE_SECONDS = 10
+
+# sets the max age for calls that need to be very updated
+FEW_CACHE_SECONDS = 5
+
+<% else %>
+
+CACHE_MIDDLEWARE_SECONDS = 0
+MANY_CACHE_SECONDS = 0
+FEW_CACHE_SECONDS = 0
+
+<% end %>
+
+### johnny cache
+
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.staticfiles',
+    'django.contrib.messages',
+    # WARNING! you should disable admin in production sites for security:
+    'django.contrib.admin',
+    'django.contrib.comments',
+    'django.contrib.markup',
+    'django.contrib.flatpages',
+    'debug_toolbar',
+    'south',
+    'tastypie',
+    'easy_thumbnails',
+    'userena',
+    'rosetta',
+    'actstream',
+    'social_auth',
+    'crispy_forms',
+    'agora_site.agora_core',
+    'agora_site.accounts',
+    'haystack',
+    'captcha',
+    'djcelery',
+    'guardian',
+    'djsgettext',
+    'djangosecure',
+    'cookielaw',
+    'johnny',
+)
+
+MIDDLEWARE_CLASSES = (
+    'johnny.middleware.LocalStoreClearMiddleware',
+    'johnny.middleware.QueryCacheMiddleware',
+#    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.common.CommonMiddleware',
+#    'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+        'JOHNNY_CACHE': True
+    }
+}
+
+JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_agora'
+
 AGORA_REGISTER_AUTO_JOIN = [<%= @agora_auto_join %>]
 
 ADMINS = (
@@ -62,8 +149,8 @@ AGORA_API_AUTO_ACTIVATION_SECRET = '<%= @agora_auto_activation_secret %>'
 SESSION_COOKIE_DOMAIN = "<%= @session_cookie_domain %>"
 
 
-AGORA_FNMT_BASE_URL = "https://fnmt.confederacionpirata.org"
-AGORA_BASE_URL = "https://agora.confederacionpirata.org"
+AGORA_FNMT_BASE_URL = "https://<%= @fnmt_fqdn %>:<%= @agora_ssl_port %>"
+AGORA_BASE_URL = "https://<%= @agora_fqdn %>:<%= @agora_ssl_port %>"
 
 AUTHENTICATION_BACKENDS = (
     'agora_site.agora_core.backends.fnmt.FNMTBackend',
@@ -78,7 +165,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 AGORA_REQUEST_SCANNED_ID_ON_REGISTER = True
 
-AGORA_FRONT_PAGE = "<%= @agora_front_page %>"
+AGORA_FRONT_PAGE = <%= @agora_front_page %>
 
 ALLOWED_HOSTS = ['<%= @agora_fqdn %>', '<%= @fnmt_fqdn %>']
 

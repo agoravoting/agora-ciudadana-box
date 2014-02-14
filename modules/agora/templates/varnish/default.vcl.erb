@@ -1,0 +1,32 @@
+backend default {
+        .host = "127.0.0.1";
+        .port = "8000";
+}
+
+sub vcl_recv {
+        # pass mode can't handle POST (yet)
+        if (req.request == "POST") {
+                return(pipe);
+        }
+
+        # don't bother caching large files
+        if(req.url ~ "\.(pdf|mp3|flv|mov|mp4|mpg|mpeg|avi|dmg)") {
+                return(pipe);
+        }
+
+        # force lookup even when cookies are present
+        if (req.request == "GET" && req.http.cookie) {
+                return(lookup);
+        }
+
+}
+
+sub vcl_fetch {
+       set beresp.do_esi = true;
+
+       # strip the cookie before an api call is inserted into cache.
+       # In Agora, API calls that are senstive to the cookie have already be set with no-cache
+       if (req.request == "GET" && req.url ~ "^(/api/v1|/js-gettext)") {
+            unset beresp.http.set-cookie;
+       }
+}

@@ -17,7 +17,7 @@ class agora() {
     exec { "apt_get_update":
         command => "apt-get update"
     } ->
-    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl', 'fail2ban']:
+    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl', 'fail2ban', 'varnish', 'memcached', 'libmemcached-dev']:
         ensure => present,
     } ->
 
@@ -72,6 +72,20 @@ class agora() {
         ensure     => running,
         enable     => true,
         hasrestart => true,
+    }
+
+    service { 'memcached':
+        ensure     => running,
+        enable     => true,
+        hasrestart => true,
+        require => Package['memcached'],
+    }
+
+    service { 'varnish':
+        ensure     => running,
+        enable     => true,
+        hasrestart => true,
+        require => Package['varnish'],
     }
 
     # --- ssh configuration --------------------------------------------------
@@ -205,7 +219,7 @@ class agora() {
         user      => 'agora',
         logoutput => true,
         creates   => '/home/agora/agora-ciudadana',
-        require => Package['virtualenvwrapper'],
+        require => Package['virtualenvwrapper', 'libmemcached-dev'],
         timeout   => 3000,
     } ->
 
@@ -281,6 +295,7 @@ class agora() {
     file { '/etc/fail2ban/filter.d/nginx-limitreq.conf':
         ensure  => file,
         content => template('agora/fail2ban/nginx-limitreq.conf.erb'),
+        require => Package['fail2ban'],
     } ->
 
     file { '/etc/fail2ban/filter.d/nginx-http-auth.conf':
@@ -294,4 +309,12 @@ class agora() {
         notify  => Service['fail2ban'],
     }
 
+    # -- varnish conf --------------------------------------------------------
+
+    file { '/etc/varnish/default.vcl':
+        ensure  => file,
+        content => template('agora/varnish/default.vcl.erb'),
+        require => Package['varnish'],
+        notify  => Service['varnish'],
+    }
 }

@@ -7,7 +7,9 @@ $session_cookie_domain = '.local.dev'
 $agora_auto_join = ''
 $agora_admin_username = 'agora'
 $agora_admin_password = 'some password'
-$agora_front_page = ''
+$agora_front_page = 'None'
+
+$enable_varnish = 'true'
 
 $admin_name = 'Bob Esponja'
 $admin_email = 'bob@local.dev'

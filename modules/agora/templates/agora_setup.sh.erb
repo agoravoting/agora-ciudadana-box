@@ -6,20 +6,22 @@ source $HOME/.profile
 cd $HOME
 [ ! -d $HOME/.virtualenvs/agora-ciudadana ] && mkvirtualenv agora-ciudadana
 
-[ ! -d $HOME/agora-ciudadana ] && git clone https://github.com/agoraciudadana/agora-ciudadana.git
+[ ! -d $HOME/agora-ciudadana ] && (git clone https://github.com/agoraciudadana/agora-ciudadana.git; cd agora-ciudadana; git checkout security)
 
+cd $HOME
 mv $HOME/custom_settings.py $HOME/agora-ciudadana/agora_site
 
-git config --global user.email <%= @admin_email %>
-git config --global user.name <%= @admin_name %>
+git config --global user.email "<%= @admin_email %>"
+git config --global user.name "<%= @admin_name %>"
 
 workon agora-ciudadana
 cd $HOME/agora-ciudadana
 git stash
 git pull --rebase
+git stash apply
 
 pip install -r requirements.txt
-pip install psycopg2 uwsgi raven
+pip install psycopg2 uwsgi raven johnny-cache pylibmc
 
 make dependencies
 make all
