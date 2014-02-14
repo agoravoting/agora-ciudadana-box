@@ -1,0 +1,10 @@
+#!/bin/bash
+
+createuser -P agora <<EOF
+<%= @db_password %>
+<%= @db_password %>
+n
+n
+n
+EOF
+createdb -O agora agora

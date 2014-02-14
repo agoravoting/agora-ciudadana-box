@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+source /home/agora/.profile
+workon agora-ciudadana
+cd agora-ciudadana
+
+git checkout agora_site/static/js/min/agora.min.js
+git checkout agora_site/static/js/min/main.min.js
+git checkout agora_site/static/less/agora.css
+git stash
+git pull
+git stash apply
+./manage.py compilemessages
+./manage.py migrate
+./manage.py syncperms
+make all
+./manage.py collectstatic --noinput
+[ -f flatpages.json ] && ./manage.py loaddata flatpages.json

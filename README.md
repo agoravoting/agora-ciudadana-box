@@ -1,35 +1,37 @@
-### Installation
+# Agora Ciudadana Puppet+Vagrant Box
 
-    host $ git clone git@github.com:agoraciudadana/agora-ciudadana-box.git
-    host $ cd agora-ciudadana-box
+puppet+vagrant setup for agora-ciudadana deployment
 
-Now you need to clone agora-ciudadana inside the cloned repo:
+## Installation (vagrant+puppet)
 
-    host $ git clone git@github.com:agoraciudadana/agora-ciudadana.git
-    host $ vagrant up
+### Install vagrant
 
-This folder (`agora-ciudadana-box`) will be mounted at `/vagrant` on the virtual machine.
+* http://www.vagrantup.com
 
-Wait for the provisioning to finish, and you will have the service available at `http://localhost:8000/` directly on your *host* machine,
-since the port is forwarded from the guest to your host.
+### Download the repository
 
-### Working
+* git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
 
-Now you can work on your `agora-ciudadana-box/agora-ciudadana` folder locally, run tests on the virtual machine,
-and test the service on your navigator.
+### Run
 
-### Logging
+* vagrant up
 
-Logging happens in two places, splitted by `stdout` and `stderr`.
+Wait for the provisioning to finish, and you will have the service available at `http://127.0.0.1:8000/` directly on your *host* machine, since the port is forwarded from the guest to your host.
 
-* celeryd
-    * `/tmp/agora-celeryd.log`
-    * `/tmp/agora-celeryd.err`
+### Accessing the vm
 
-* webserver
-    * `/tmp/agora-server.log`
-    * `/tmp/agora-server.err`
+* vagrant ssh
+* sudo -s
 
-### Contributing
+### Applying puppet manually inside the vm
 
-Fork it, hack it, pull request it!
+This is only needed if something went wrong or you want update the installation. Apply puppet manually with:
+
+* cd /vagrant; sudo puppet apply manifests/init.pp --modulepath modules/
+
+## Standalone installation (no vagrant, only puppet)
+
+* git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
+* cd agora-ciudadana-box
+* sudo shell/bootstrap.sh
+* sudo puppet apply manifests/init.pp --modulepath modules/

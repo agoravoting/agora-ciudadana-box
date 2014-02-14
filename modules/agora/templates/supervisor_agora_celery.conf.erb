@@ -1,0 +1,9 @@
+[program:agora-celery]
+command=/home/agora/agora_celery_launch.sh
+process_name=%(program_name)s
+directory=/home/agora/
+autostart=true
+autorestart=true
+user=agora
+redirect_stderr=true
+environment=PATH="/home/agora/.virtualenvs/agora-ciudadana/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

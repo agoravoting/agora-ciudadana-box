@@ -1,0 +1,152 @@
+import os
+
+# Configura tu valor DSN
+RAVEN_CONFIG = {
+    'dsn': 'https://0ad89a33ef3a498fabc296d6e890b8f4:b63b6339c7014804ae2585359427ed72@agora.confederacionpirata.org:90/2',
+}
+
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+SESSION_COOKIE_HTTPONLY = True
+
+AGORA_USE_HTTPS = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+USE_X_FORWARDED_HOST = True
+
+SITE_NAME = "<%= @site_name %>"
+
+AGORA_CREATION_PERMISSIONS="superusers-only"
+
+AGORA_REGISTER_AUTO_JOIN = [<%= @agora_auto_join %>]
+
+ADMINS = (
+   ('<%= @admin_name %>', '<%= @admin_email %>'),
+)
+
+DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': 'agora',
+         'USER': 'agora',
+         'PASSWORD': '<%= @db_password %>',
+         'HOST': 'localhost',
+         'PORT': '5432',
+     }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST='<%= @email_host %>'
+EMAIL_HOST_PASSWORD='<%= @email_host_password %>'
+EMAIL_HOST_USER='<%= @email_host_user %>'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL = '<%= @server_email %>'
+EMAIL_PORT = '<%= @email_port %>'
+
+SECRET_KEY = '<%= @django_secret_key %>'
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
+AGORA_ALLOW_FNMT_CERTIFICATE = True
+AGORA_ALLOW_API_AUTO_ACTIVATION = True
+
+
+AGORA_API_AUTO_ACTIVATION_SECRET = '<%= @agora_auto_activation_secret %>'
+
+# use a wildcard session cookie domain to make fnmt login work with redirects
+# between subdomains
+SESSION_COOKIE_DOMAIN = "<%= @session_cookie_domain %>"
+
+
+AGORA_FNMT_BASE_URL = "https://fnmt.confederacionpirata.org"
+AGORA_BASE_URL = "https://agora.confederacionpirata.org"
+
+AUTHENTICATION_BACKENDS = (
+    'agora_site.agora_core.backends.fnmt.FNMTBackend',
+    'userena.backends.UserenaAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+SECURE_SSL_REDIRECT = True
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+AGORA_REQUEST_SCANNED_ID_ON_REGISTER = True
+
+AGORA_FRONT_PAGE = "<%= @agora_front_page %>"
+
+ALLOWED_HOSTS = ['<%= @agora_fqdn %>', '<%= @fnmt_fqdn %>']
+
+STATIC_ROOT = "/var/www/agora/static"
+MEDIA_ROOT = "/var/www/agora/media"
+
+PRIVATE_DATA_ROOT = '/home/agora/agoraprivate/'
+
+from django.core.exceptions import SuspiciousOperation
+
+def skip_suspicious_operations(record):
+  if record.exc_info:
+    exc_value = record.exc_info[1]
+    if isinstance(exc_value, SuspiciousOperation):
+      return False
+  return True
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+        'skip_suspicious_operations': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_suspicious_operations,
+        },
+    },
+    'handlers': {
+        'sentry': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false', 'skip_suspicious_operations'],
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    }
+}
+
+ANONYMIZE_USERS = True
+
+SHOW_COOKIE_LAW_BANNER = False

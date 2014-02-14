@@ -1,0 +1,7 @@
+[program:agora]
+command=/usr/bin/uwsgi --ini /home/agora/uwsgi.ini
+directory=/home/agora/agora-ciudadana/
+autostart=true
+autorestart=true
+user=agora
+environment=PATH="/home/agora/.virtualenvs/agora-ciudadana/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

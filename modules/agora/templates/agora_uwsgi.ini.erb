@@ -1,0 +1,17 @@
+[uwsgi]
+chdir=/home/agora/agora-ciudadana/
+home=/home/agora/.virtualenvs/agora-ciudadana
+module=agora_site.wsgi:application
+master=True
+plugins=python
+uid=www-data
+workers=2
+threads=2
+gid=www-data
+pidfile=/home/agora/agora.pid
+vacuum=True
+chmod-socket=666
+max-requests=5000
+harakiri=30
+socket=/home/agora/agora.sock
+backtrace-depth=10

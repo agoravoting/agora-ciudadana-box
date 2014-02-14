@@ -1,0 +1,116 @@
+upstream agora-django {
+    server unix:///home/agora/agora.sock;
+}
+
+server {
+    listen         80;
+    server_name    <%= @agora_fqdn %>;
+    rewrite        ^ https://$server_name$request_uri? permanent;
+    server_tokens off;
+}
+
+server {
+    listen <%= @agora_ssl_port %> ssl;
+    server_name "";
+    server_tokens off;
+
+    add_header Strict-Transport-Security max-age=31536000;
+    ssl_certificate /var/www/certs/agora/cert-ca-bundle.pem;
+    ssl_certificate_key /var/www/certs/agora/key-nopass.pem;
+    ssl_session_cache       builtin:1000  shared:SSL:10m;
+    ssl_session_timeout     5m;
+    ssl_ecdh_curve          secp521r1;
+    ssl_protocols           TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers       on;
+    ssl_ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-RC4-SHA:ECDHE-RSA-RC4-SHA:ECDH-ECDSA-RC4-SHA:ECDH-RSA-RC4-SHA:ECDHE-RSA-AES256-SHA:RC4-SHA:HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!CBC:!EDH:!kEDH:!PSK:!SRP:!kECDH;
+}
+
+# secure ssl server
+server {
+    listen      <%= @agora_ssl_port %> ssl;
+    server_name <%= @agora_fqdn %>;
+    charset     utf-8;
+    client_max_body_size 5M;
+    server_tokens  off;
+
+    ssl_certificate /var/www/certs/agora/cert-ca-bundle.pem;
+    ssl_certificate_key /var/www/certs/agora/key-nopass.pem;
+    ssl_session_cache       builtin:1000  shared:SSL:10m;
+    ssl_session_timeout     5m;
+    ssl_ecdh_curve          secp521r1;
+    ssl_protocols           TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers       on;
+    ssl_ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-RC4-SHA:ECDHE-RSA-RC4-SHA:ECDH-ECDSA-RC4-SHA:ECDH-RSA-RC4-SHA:ECDHE-RSA-AES256-SHA:RC4-SHA:HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!CBC:!EDH:!kEDH:!PSK:!SRP:!kECDH;
+
+    location /media  {
+        alias /var/www/agora/media;
+    }
+
+    location /static {
+        autoindex on;
+        alias /var/www/agora/static;
+    }
+
+    location / {
+
+        uwsgi_pass  agora-django;
+        include     /etc/nginx/uwsgi_params;
+
+        limit_req   zone=one  burst=3  nodelay;
+
+        uwsgi_param X-Forwarded-Host $host;
+        uwsgi_param X-Forwarded-Proto https;
+        uwsgi_param X-Scheme $scheme;
+    }
+}
+
+server {
+    listen      <%= @agora_ssl_port %> ssl;
+    server_name <%= @fnmt_fqdn %>;
+    charset     utf-8;
+    client_max_body_size 5M;
+    server_tokens  off;
+
+    # allow only to use this domain for login
+    if ($request_uri !~ "^/(user/login/fnmt/|media|static|js-gettext|misc)") {
+       rewrite  ^  https://<%= @agora_fqdn %>  permanent;
+    }
+
+    add_header Strict-Transport-Security max-age=31536000;
+    ssl_certificate /var/www/certs/fnmt/cert-ca-bundle.pem;
+    ssl_certificate_key /var/www/certs/fnmt/key-nopass.pem;
+    ssl_session_cache       builtin:1000  shared:SSL:10m;
+    ssl_session_timeout     5m;
+    ssl_ecdh_curve          secp521r1;
+    ssl_protocols           TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers       on;
+    ssl_ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-RC4-SHA:ECDHE-RSA-RC4-SHA:ECDH-ECDSA-RC4-SHA:ECDH-RSA-RC4-SHA:ECDHE-RSA-AES256-SHA:RC4-SHA:HIGH:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!CBC:!EDH:!kEDH:!PSK:!SRP:!kECDH;
+
+    # this is what makes this subdomain request fnmt user certificate
+    ssl_verify_client optional;
+    ssl_client_certificate /var/www/certs/fnmt/ca.pem;
+
+    location /media  {
+        alias /var/www/agora/media;
+    }
+
+    location /static {
+        autoindex on;
+        alias /var/www/agora/static;
+    }
+
+    location / {
+        uwsgi_pass  agora-django;
+        include     /etc/nginx/uwsgi_params;
+
+        limit_req   zone=one  burst=3  nodelay;
+
+        uwsgi_param X-Forwarded-Host $host;
+        uwsgi_param X-Forwarded-Proto https;
+        uwsgi_param X-Scheme $scheme;
+
+        # this is what sends the certificate data to the backend
+        uwsgi_param X-Sender-SSL-Certificate $ssl_client_cert;
+        uwsgi_param X-Sender-SSL-Verify $ssl_client_verify;
+    }
+}

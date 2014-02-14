@@ -1,0 +1,56 @@
+#!/bin/bash
+
+Contry=ES
+State=Madrid
+Locality=Madrid
+Organization="<%= @site_name %>"
+OrganizationUnit="<%= @site_name %>"
+FQDN='<%= @agora_fqdn %>'
+FNMT_FQDN='<%= @fnmt_fqdn %>'
+Email='<%= @admin_mail %>'
+
+cd /var/www/certs/agora/
+generate_cert=$([ ! -f cert.pem ] && echo "y")
+if [ ! -z $generate_cert ]
+then
+    openssl req -nodes -x509 -newkey rsa:4096 -keyout key-nopass.pem -out cert.pem -days 365 <<EOF
+${Contry}
+${State}
+${Locality}
+${Organization}
+${OrganizationUnit}
+${FQDN}
+${Email}
+EOF
+    cp cert.pem cert-ca-bundle.pem
+fi
+
+cd /var/www/certs/fnmt/
+generate_cert=$([ ! -f cert.pem ] && echo "y")
+if [ ! -z $generate_cert ]
+then
+    openssl req -nodes -x509 -newkey rsa:4096 -keyout key-nopass.pem -out cert.pem -days 365 <<EOF
+${Contry}
+${State}
+${Locality}
+${Organization}
+${OrganizationUnit}
+${FNMT_FQDN}
+${Email}
+EOF
+    cp cert.pem cert-ca-bundle.pem
+fi
+
+# convert
+wget --no-check-certificate  https://www.sede.fnmt.gob.es/documents/11614/66000/Certificado+Raiz+Clase2A/29de1646-675e-49b3-bd8e-0ff6ca02cb66 -O fnmt_ca.cer
+sha1sum=$(sha1sum fnmt_ca.cer)
+
+if [ ! "$sha1sum" == '43f9b110d5bafd48225231b0d0082b372fef9a54  fnmt_ca.cer' ]
+then
+    echo "invalid fnmt certificate"
+    exit 1
+fi
+openssl x509 -inform der -in fnmt_ca.cer -out ca.pem
+rm fnmt_ca.cer
+
+exit 0
