@@ -9,6 +9,6 @@ dpkg -i /tmp/puppetlabs-release-wheezy.deb
 rm /tmp/puppetlabs-release-wheezy.deb
 
 apt-get update
-apt-get install puppet
+apt-get install --force-yes puppet
 
 echo "Puppet installed!"
