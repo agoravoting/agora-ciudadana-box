@@ -41,5 +41,5 @@ This is only needed if something went wrong or you want update the installation.
 
 * git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
 * cd agora-ciudadana-box
-* sudo shell/bootstrap.sh
+* sudo sh shell/bootstrap.sh
 * sudo puppet apply manifests/init.pp --modulepath modules/
