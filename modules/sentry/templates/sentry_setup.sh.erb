@@ -1,0 +1,12 @@
+#!/bin/bash
+
+HOME=/home/sentry
+source $HOME/.profile
+
+cd $HOME
+[ ! -d $HOME/.virtualenvs/sentry ] && mkvirtualenv sentry
+
+workon sentry
+pip install sentry[postgres] hiredis nydus django-bcrypt python-memcached pylibmc
+
+sentry upgrade --noinput

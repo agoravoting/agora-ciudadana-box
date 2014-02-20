@@ -1,10 +1,5 @@
 import os
 
-# Configura tu valor DSN
-RAVEN_CONFIG = {
-    'dsn': 'https://0ad89a33ef3a498fabc296d6e890b8f4:b63b6339c7014804ae2585359427ed72@agora.confederacionpirata.org:90/2',
-}
-
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
@@ -20,8 +15,12 @@ SITE_NAME = "<%= @site_name %>"
 
 AGORA_CREATION_PERMISSIONS="superusers-only"
 
+# See http://sentry.readthedocs.org/en/latest/queue/index.html for more
+# information on configuring your queue broker and workers. Sentry relies
+# on a Python framework called Celery to manage queues.
 
-
+# You can enable queueing of jobs by turning off the always eager setting:
+CELERY_ALWAYS_EAGER = False
 
 ###### for varnish
 
@@ -55,8 +54,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.messages',
-    # WARNING! you should disable admin in production sites for security:
-    'django.contrib.admin',
     'django.contrib.comments',
     'django.contrib.markup',
     'django.contrib.flatpages',

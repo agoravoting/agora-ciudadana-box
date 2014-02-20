@@ -1,0 +1,23 @@
+[uwsgi]
+home=/home/sentry/.virtualenvs/sentry
+plugins=python
+uid=www-data
+gid=www-data
+pidfile=/home/sentry/sentry.pid
+vacuum=True
+threads=2
+chmod-socket=666
+max-requests=5000
+harakiri=30
+socket=/home/sentry/sentry.sock
+backtrace-depth=10
+env = SENTRY_CONF=/home/sentry/.sentry/sentry.conf.py
+module = sentry.wsgi
+
+; spawn the master and 4 processes
+master = true
+processes = 4
+
+; allow longer headers for raven.js if applicable
+; default: 4096
+buffer-size = 32768

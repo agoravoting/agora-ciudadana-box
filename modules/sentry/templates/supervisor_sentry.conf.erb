@@ -1,0 +1,7 @@
+[program:sentry]
+command=/usr/bin/uwsgi --ini /home/sentry/uwsgi.ini
+directory=/home/sentry/
+autostart=true
+autorestart=true
+user=sentry
+environment=PATH="/home/sentry/.virtualenvs/sentry/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

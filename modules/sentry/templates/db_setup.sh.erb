@@ -1,0 +1,10 @@
+#!/bin/bash
+
+createuser -P sentry <<EOF
+<%= @sentry_db_password %>
+<%= @sentry_db_password %>
+n
+n
+n
+EOF
+createdb -E utf-8 -O sentry sentry

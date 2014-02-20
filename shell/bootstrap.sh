@@ -8,4 +8,7 @@ wget -qO /tmp/puppetlabs-release-wheezy.deb https://apt.puppetlabs.com/puppetlab
 dpkg -i /tmp/puppetlabs-release-wheezy.deb
 rm /tmp/puppetlabs-release-wheezy.deb
 
+apt-get update
+apt-get install puppet
+
 echo "Puppet installed!"

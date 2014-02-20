@@ -9,7 +9,10 @@ cd $HOME
 [ ! -d $HOME/agora-ciudadana ] && (git clone https://github.com/agoraciudadana/agora-ciudadana.git; cd agora-ciudadana; git checkout security)
 
 cd $HOME
-mv $HOME/custom_settings.py $HOME/agora-ciudadana/agora_site
+if [ ! -f  $HOME/agora-ciudadana/agora_site/custom_settings.py ] || [ "<%= @overwrite_agora_settings %>" == "true" ]
+then
+    mv $HOME/custom_settings.py $HOME/agora-ciudadana/agora_site
+fi
 
 git config --global user.email "<%= @admin_email %>"
 git config --global user.name "<%= @admin_name %>"

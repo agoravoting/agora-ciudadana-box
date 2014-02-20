@@ -1,0 +1,42 @@
+#!/bin/bash
+
+if [ ! "$(whoami)" == "root" ]
+then
+    echo "You need to execute this command as root"
+    exit 1
+fi
+
+if [ ! -f $1 ]
+then
+    echo "$1 is not a file or cannot be read"
+    exit 1
+fi
+
+export BACKUPD=/tmp/backup
+export AGORAD=/home/agora
+rm -rf $BACKUPD
+cd $(dirname $BACKUPD)
+rm -rf tmp.tar.gz
+gpg --passphrase-file /root/.backup_password -o tmp.tar.gz -d $1  2>/dev/null
+tar zxf tmp.tar.gz
+rm tmp.tar.gz
+
+cd $BACKUPD
+
+supervisorctl stop agora agora-celery sentry
+service nginx stop
+sudo -u postgres -H bash -l -c "dropdb agora; createdb -O agora agora; pg_restore -d agora agora.dump"
+sudo -u postgres -H bash -l -c "dropdb sentry; createdb -O sentry sentry; pg_restore -d sentry sentry.dump"
+
+cp -r $BACKUPD/certs/* /var/www/certs/
+cp $BACKUPD/agora_custom_settings.py $AGORAD/agora-ciudadana/agora_site/custom_settings.py
+cp $BACKUPD/nginx_conf/* /etc/nginx/conf.d
+cp $BACKUPD/supervisor_confd/* /etc/supervisor/conf.d
+
+# we do not restore logs, that's just stored for analysis
+
+cd
+rm -rf $BACKUPD
+
+supervisorctl start agora agora-celery sentry
+service nginx start

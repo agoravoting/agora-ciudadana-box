@@ -1,0 +1,27 @@
+#!/bin/bash
+
+Contry=ES
+State=Madrid
+Locality=Madrid
+Organization="<%= @site_name %>"
+OrganizationUnit="<%= @site_name %>"
+FQDN='<%= @sentry_fqdn %>'
+Email='<%= @admin_mail %>'
+
+cd /var/www/certs/sentry/
+generate_cert=$([ ! -f cert.pem ] && echo "y")
+if [ ! -z $generate_cert ]
+then
+    openssl req -nodes -x509 -newkey rsa:4096 -keyout key-nopass.pem -out cert.pem -days 365 <<EOF
+${Contry}
+${State}
+${Locality}
+${Organization}
+${OrganizationUnit}
+${FQDN}
+${Email}
+EOF
+    cp cert.pem cert-ca-bundle.pem
+fi
+
+exit 0

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+if [ ! "$(whoami)" == "root" ]
+then
+  echo "You need to execute this command as root"
+  exit 1
+fi
+
+BACKUPD=/tmp/backup
+BACKUP_DIR=/backup
+AGORAD=/home/agora
+DATE=`date '+%d_%m_%y_%H_%M'`
+
+rm -rf $BACKUPD
+mkdir -p $BACKUPD
+chown postgres:users $BACKUPD
+cd $BACKUPD
+
+[ -d $BACKUP_DIR ] || mkdir $BACKUP_DIR
+
+sudo -u postgres -H bash -l -c "pg_dump agora  -Fc -i -b -f $BACKUPD/agora.dump"
+sudo -u postgres -H bash -l -c "pg_dump sentry -Fc -i -b -f $BACKUPD/sentry.dump"
+
+cp -r /var/www/certs/ $BACKUPD/certs
+cp $AGORAD/agora-ciudadana/agora_site/custom_settings.py $BACKUPD/agora_custom_settings.py
+cp -r /etc/nginx/conf.d $BACKUPD/nginx_conf
+cp -r /etc/supervisor/conf.d $BACKUPD/supervisor_confd
+mkdir $BACKUPD/logs
+cp /var/log/auth.* $BACKUPD/logs
+cp /var/log/dmesg.* $BACKUPD/logs
+cp -r /var/log/postgresql $BACKUPD/logs/postgresql
+cp -r /var/log/varnish $BACKUPD/logs/varnish_logs
+cp -r /var/log/supervisor $BACKUPD/logs/supervisor
+cp -r /var/log/rabbitmq $BACKUPD/logs/rabbitmq
+cp -r /var/log/nginx $BACKUPD/logs/nginx
+
+BACKUP="${BACKUP_DIR}/${DATE}.tar.gz"
+cd $(dirname $BACKUPD)
+tar zcf "${BACKUP_DIR}/${DATE}.tar.gz" $(basename $BACKUPD)
+
+gpg --passphrase-file /root/.backup_password -c $BACKUP 2>/dev/null
+rm $BACKUP
+
+
+[ -f $BACKUP_DIR/latest ] && rm $BACKUP_DIR/latest
+ln -sf "$BACKUP.gpg" $BACKUP_DIR/latest

@@ -17,7 +17,7 @@ class agora() {
     exec { "apt_get_update":
         command => "apt-get update"
     } ->
-    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl', 'fail2ban', 'varnish', 'memcached', 'libmemcached-dev']:
+    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl', 'fail2ban', 'varnish', 'memcached', 'libmemcached-dev', 'goaccess']:
         ensure => present,
     } ->
 
@@ -111,6 +111,14 @@ class agora() {
 
     # --- database -----------------------------------------------------------
 
+    # workaround for http://projects.puppetlabs.com/issues/4695
+    # when PostgreSQL is installed with SQL_ASCII encoding instead of UTF8
+    exec { 'utf8 postgres':
+        command => 'pg_dropcluster --stop 9.1 main ; pg_createcluster --start --locale en_US.UTF-8 9.1 main',
+        user    => 'postgres',
+        unless  => 'psql -t -c "\l" | grep template1 | grep -q UTF',
+    } ->
+
     file { '/tmp/db_setup.sh':
         ensure  => file,
         mode    => 'a+x',
@@ -152,7 +160,6 @@ class agora() {
         group   => 'users',
         recurse => true,
     } ->
-
 
     file { '/tmp/generate_certs.sh':
         ensure  => file,
