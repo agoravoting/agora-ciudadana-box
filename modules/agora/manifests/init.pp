@@ -17,7 +17,7 @@ class agora() {
     exec { "apt_get_update":
         command => "apt-get update"
     } ->
-    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl', 'fail2ban', 'varnish', 'memcached', 'libmemcached-dev', 'goaccess']:
+    package { ['curl', 'aptitude', 'git', 'vim', 'build-essential', 'rabbitmq-server', 'gettext', 'libxml2-dev', 'libxslt1-dev', 'python2.7-dev', 'virtualenvwrapper', 'postgresql', 'postgresql-server-dev-all', 'supervisor', 'pwgen', 'uwsgi', 'python-pip', 'uwsgi-plugin-python', 'openssl', 'fail2ban', 'varnish', 'memcached', 'libmemcached-dev', 'goaccess', 'libffi-dev']:
         ensure => present,
     } ->
 
