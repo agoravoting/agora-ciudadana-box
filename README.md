@@ -12,6 +12,10 @@ puppet+vagrant setup for agora-ciudadana deployment
 
 * git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
 
+### Install the vb-guest plugin
+
+* vagrant plugin install vagrant-vbguest
+
 ### Run
 
 * vagrant up
