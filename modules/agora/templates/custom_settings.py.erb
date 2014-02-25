@@ -164,7 +164,11 @@ AGORA_REQUEST_SCANNED_ID_ON_REGISTER = True
 
 AGORA_FRONT_PAGE = <%= @agora_front_page %>
 
-ALLOWED_HOSTS = ['<%= @agora_fqdn %>', '<%= @fnmt_fqdn %>']
+if '<%= @agora_ssl_port %>' not in ['443', '80']:
+    ALLOWED_HOSTS = ['<%= @agora_fqdn %>:<%= @agora_ssl_port %>',
+                     '<%= @fnmt_fqdn %>:<%= @agora_ssl_port %>']
+else:
+    ALLOWED_HOSTS = ['<%= @agora_fqdn %>', '<%= @fnmt_fqdn %>]
 
 STATIC_ROOT = "/var/www/agora/static"
 MEDIA_ROOT = "/var/www/agora/media"

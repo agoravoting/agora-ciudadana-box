@@ -5,7 +5,7 @@ PIDFILE=$HOME/agora-celery.pid
 
 ROOTD=$HOME/agora-ciudadana
 cd $ROOTD
-workon agora-ciudadana
+source $HOME/.virtualenvs/agora-ciudadana/bin/activate
 
 if [ -f $PIDFILE ]; then
     kill `cat -- $PIDFILE`

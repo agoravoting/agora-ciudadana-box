@@ -43,6 +43,8 @@ This is only needed if something went wrong or you want update the installation.
 
 ## Standalone installation (no vagrant, only puppet)
 
+Apply puppet manually in a fresh Debian 7.4 (with no apache installed!) with:
+
 * git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
 * cd agora-ciudadana-box
 * sudo sh shell/bootstrap.sh
