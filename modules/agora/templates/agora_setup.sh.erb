@@ -36,7 +36,7 @@ make all
 ./manage.py compilemessages
 ./manage.py collectstatic --noinput
 
-echo '[{"pk": 1, "model": "sites.site", "fields": {"domain": "<%= $agora_fqdn %>", "name": "<%= $agora_fqdn %>"}}]' > site.json
+echo '[{"pk": 1, "model": "sites.site", "fields": {"domain": "<%= @agora_fqdn %>", "name": "<%= @agora_fqdn %>"}}]' > site.json
 ./manage.py loaddata site.json
 rm site.json
 
