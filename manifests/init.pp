@@ -5,8 +5,14 @@ $agora_ssl_port = '9443'
 $fnmt_fqdn = 'fnmt.local.dev'
 $session_cookie_domain = '.local.dev'
 
+$aelection_fqdn = 'local.dev'
+$aelection_ssl_port = '8443'
+
 # if activated, it will overwrite agora settings if present
 $overwrite_agora_settings = 'true'
+
+# if activated, it will overwrite agora-election settings if present
+$overwrite_aelection_settings = 'true'
 
 $agora_auto_join = ''
 $agora_admin_username = 'agora'
@@ -26,8 +32,13 @@ $email_port = ''
 $agora_auto_activation_secret = 'some secret key'
 
 $db_password =  'some secret password'
+$db_aelection_password = 'some secret password'
 
 $django_secret_key = 'some secret password'
+
+$aelection_secret_key = 'some secret password'
+
+$agora_aelection_shared_key = 'some secret password'
 
 # admin and ssh stuff
 
@@ -52,4 +63,5 @@ $backup_password = 'backup password'
 require agora
 require sentry
 require backup
+# require agora-election
 

@@ -49,25 +49,6 @@ class agora-election {
         timeout   => 10,
 		require => Package['postgresql']
     } ->
-	
-	# --- services -----------------------------------------------------------
-	
-	service { 'rabbitmq-server':
-        ensure => running,
-        enable => true,
-    } ->
-	
-	service { 'postgresql':
-        ensure   => running,
-        enable   => true,
-        restart  => 'service postgresql restart',
-    } ->
-	
-	service { 'supervisor':
-        ensure     => running,
-        enable     => true,
-        restart    => 'supervisorctl reload',
-    } ->
 
     # -- ssl certificate -----------------------------------------------------
 
@@ -145,5 +126,24 @@ class agora-election {
         ensure  => file,
         content => template('agora-election/supervisor_aelection_celery.conf.erb'),
         notify  => Service['supervisor'],
+    }
+	
+	# --- services -----------------------------------------------------------
+	
+	service { 'rabbitmq-server':
+        ensure => running,
+        enable => true,
+    } ->
+	
+	service { 'postgresql':
+        ensure   => running,
+        enable   => true,
+        restart  => 'service postgresql restart',
+    } ->
+	
+	service { 'supervisor':
+        ensure     => running,
+        enable     => true,
+        restart    => 'supervisorctl reload',
     }
 }
