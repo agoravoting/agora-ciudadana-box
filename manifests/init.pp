@@ -2,17 +2,12 @@
 $site_name = 'Agora Voting'
 $agora_fqdn = 'local.dev'
 $agora_ssl_port = '9443'
+$enable_fnmt = true
 $fnmt_fqdn = 'fnmt.local.dev'
 $session_cookie_domain = '.local.dev'
 
-$aelection_fqdn = 'local.dev'
-$aelection_ssl_port = '8443'
-
 # if activated, it will overwrite agora settings if present
 $overwrite_agora_settings = 'true'
-
-# if activated, it will overwrite agora-election settings if present
-$overwrite_aelection_settings = 'true'
 
 $agora_auto_join = ''
 $agora_admin_username = 'agora'
@@ -60,8 +55,33 @@ $sentry_userpass = 'admin pass'
 
 $backup_password = 'backup password'
 
+# aelection
+
+$enable_aelection = true
+
+# if activated, it will overwrite agora-election settings if present
+$overwrite_aelection_settings = 'true'
+
+$default_lang_code = 'en'
+
+$sms_provider = 'console'
+$sms_domain_id = 'comercial'
+$sms_login = ''
+$sms_password = ''
+$sms_sender_id = ''
+
+# nginx security (TODO)
+
+$enable_agora_httpauth = false
+$httpauth_user = 'prueba'
+$httpauth_password = 'prueba'
+
 require agora
 require sentry
 require backup
-# require agora-election
+
+if ($enable_aelection) {
+require agora-election
+}
+
 

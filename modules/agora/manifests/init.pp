@@ -215,6 +215,13 @@ class agora() {
         timeout   => 3000,
     } ->
 
+    file { '/usr/bin/crypt.pl':
+        ensure  => file,
+        owner   => 'root',
+        mode    => 'a+x',
+        content => template('agora/crypt.pl.erb'),
+    } ->
+
     file { '/tmp/agora_setup.sh':
         ensure  => file,
         owner   => 'agora',
@@ -273,7 +280,7 @@ class agora() {
 
     file {'/etc/nginx/nginx.conf':
         ensure  => file,
-        owner   => 'agora',
+        owner   => 'nginx',
         content => template('agora/nginx.conf.erb'),
         notify  => Service['nginx'],
         require => Package['nginx'],

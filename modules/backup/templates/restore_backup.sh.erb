@@ -23,20 +23,26 @@ rm tmp.tar.gz
 
 cd $BACKUPD
 
-supervisorctl stop agora agora-celery sentry
+supervisorctl stop agora agora-celery sentry aelection aelection-sentry
 service nginx stop
 sudo -u postgres -H bash -l -c "dropdb agora; createdb -O agora agora; pg_restore -d agora agora.dump"
 sudo -u postgres -H bash -l -c "dropdb sentry; createdb -O sentry sentry; pg_restore -d sentry sentry.dump"
+sudo -u postgres -H bash -l -c "dropdb aelection; createdb -O aelection aelection; pg_restore -d aelection aelection.dump"
 
 cp -r $BACKUPD/certs/* /var/www/certs/
 cp $BACKUPD/agora_custom_settings.py $AGORAD/agora-ciudadana/agora_site/custom_settings.py
 cp $BACKUPD/nginx_conf/* /etc/nginx/conf.d
 cp $BACKUPD/supervisor_confd/* /etc/supervisor/conf.d
+cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/
+cp /home/aelection/agora-election/agora_election/custom_settings.py $BACKUPD/aelection/
+
+cp $BACKUPD/aelection/*.json /home/aelection/agora-election/agora_election/
+cp $BACKUPD/aelection/custom_settings.py /home/aelection/agora-election/agora_election/
 
 # we do not restore logs, that's just stored for analysis
 
 cd
 rm -rf $BACKUPD
 
-supervisorctl start agora agora-celery sentry
+supervisorctl start agora agora-celery sentry aelection aelection-sentry
 service nginx start

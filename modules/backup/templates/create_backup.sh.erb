@@ -20,6 +20,7 @@ cd $BACKUPD
 
 sudo -u postgres -H bash -l -c "pg_dump agora  -Fc -i -b -f $BACKUPD/agora.dump"
 sudo -u postgres -H bash -l -c "pg_dump sentry -Fc -i -b -f $BACKUPD/sentry.dump"
+sudo -u postgres -H bash -l -c "pg_dump sentry -Fc -i -b -f $BACKUPD/aelection.dump"
 
 cp -r /var/www/certs/ $BACKUPD/certs
 cp $AGORAD/agora-ciudadana/agora_site/custom_settings.py $BACKUPD/agora_custom_settings.py
@@ -33,6 +34,9 @@ cp -r /var/log/varnish $BACKUPD/logs/varnish_logs
 cp -r /var/log/supervisor $BACKUPD/logs/supervisor
 cp -r /var/log/rabbitmq $BACKUPD/logs/rabbitmq
 cp -r /var/log/nginx $BACKUPD/logs/nginx
+mkdir -p $BACKUPD/aelection
+cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/
+cp /home/aelection/agora-election/agora_election/custom_settings.py $BACKUPD/aelection/
 
 BACKUP="${BACKUP_DIR}/${DATE}.tar.gz"
 cd $(dirname $BACKUPD)

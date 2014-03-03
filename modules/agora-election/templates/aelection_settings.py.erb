@@ -1,9 +1,12 @@
 import os
 import re
+import json
 import logging
 ROOT_PATH = os.path.dirname(__file__)
 
 ########### agora-election
+
+STATIC_PATH = "/static2"
 
 SITE_NAME = "Agora-Election"
 
@@ -47,32 +50,50 @@ MAX_TOKEN_GUESSES = 5
 # timeframe within which a token is said to be valid
 SMS_TOKEN_EXPIRE_SECS = 60*10
 
-AGORA_SHARED_SECRET_KEY = '<%= @agora_aelection_shared_key %>'
+AGORA_SHARED_SECRET_KEY = '<%= @agora_auto_activation_secret %>'
 
 ########### data
+
+def get_json(fname):
+    with open(fname, 'r', encoding="utf-8") as f:
+        return json.loads(f.read())
 
 AGORA_ELECTION_DATA = dict(
     parent_site=dict(
         name="www.podemos.info",
         url="//www.podemos.info",
     ),
-    election_url='https://<%= @agora_fqdn %>:<%= @agora_ssl_port %>/edulix/hola/election/primarias-de-la-confederacion-pirata-para-el-parlamento-europeo15/vote',
-    title="Primarias abiertas al Parlamento Europeo",
+    election=get_json('election.json'),
+    faq_questions=get_json('faq.json'),
     subtitle="Una candidatura popular y ciudadana",
-    short_description="Es la hora del protagonismo popular y ciudadano. Ayúdanos a confeccionar la lista electoral votando en 3 sencillos pasos: regístrate, verifica un código que te llegará por SMS, y accede a la cabina de votación, seleccionando hasta 3 candidatos.",
     start_voting="20 marzo, 10:00",
     end_voting="27 marzo, 10:00",
-    num_votes="+1000",
     tlf_no_rx=ALLOWED_TLF_NUMS_RX,
-    candidates=[
-        dict(
-            value="Pablo Iglesias Turrión",
-        ),
-    ],
+    contact=dict(
+        email="agora@agoravoting.com",
+        twitter_username="agoravoting"
+    ),
     tos=dict(
         title="He leído y acepto las condiciones",
         text="De acuerdo con lo dispuesto en la Ley Orgánica 15/1999, de 13 de diciembre, de protección de datos de carácter personal, informamos que los datos personales recogidos aquí serán incorporados a un fichero titularidad de la Asociación por la Participación Social y Cultural con CIF G8693671 creada para esta la gestión administrativa de esta iniciativa. El fichero está inscrito en el Registro General de la Agencia Española de Protección de Datos. Mediante el envío del formulario existente en esta página web, el/la remitente presta su consentimiento al tratamiento automatizado de los datos incluidos en el mismo. Nos comprometemos asimismo al uso responsable y confidencial de los datos, garantizando que los datos de las/los usuarios se tratarán de acuerdo con las exigencias legales. En ningún caso los datos facilitados serán objeto de venta ni cesión a terceros. Podrá ejercitar los derechos de acceso, rectificación, cancelación y oposición establecidos en dicha Ley a través de correo electrónica, adjuntando fotocopia de su DNI/Pasaporte, en la siguiente dirección: participasocialcultural@gmail.com"
-    )
+    ),
+    authorities=[
+        dict(
+            name="AgoraVoting",
+            url="https://agoravoting.com",
+            description="<p>Es la plataforma de votación de software libre con la que se realizan estas primarias. Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem.</p>"
+        ),
+        dict(
+            name="Fundación Civio",
+            url="http://civio.es",
+            description="<p>Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem.</p><p>Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem.</p>"
+        ),
+        dict(
+            name="Hackandalus",
+            url="https://hackandalus.net",
+            description="<p>Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem.</p><p>Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem.</p>"
+        ),
+    ]
 )
 
 ########### flask
@@ -85,11 +106,11 @@ SESSION_COOKIE_SECURE = True
 
 USE_X_SENDFILE = False
 
-SERVER_NAME = '<%= @aelection_fqdn %>:<%= @aelection_ssl_port %>'
+SERVER_NAME = '<%= @agora_fqdn %>:<%= @agora_ssl_port %>'
 
 SECRET_KEY = '<%= @aelection_secret_key %>'
 
-BABEL_DEFAULT_LOCALE = 'en'
+BABEL_DEFAULT_LOCALE = '<%= @default_lang_code %>'
 
 ########### settings
 
@@ -108,15 +129,8 @@ CELERY_ENABLE_UTC = True
 
 ########### sms provider
 
-SMS_PROVIDER = 'altiria'
-SMS_DOMAIN_ID = 'comercial'
-SMS_LOGIN = ''
-SMS_PASSWORD = ''
-SMS_URL = 'http://www.altiria.net/api/http'
-SMS_SENDER_ID = ''
-
-
-if os.path.isfile(os.path.join(ROOT_PATH, "custom_settings.py")):
-    from custom_settings import *
-else:
-    logging.warn("custom_settings.py not being loaded")
+SMS_PROVIDER = '<%= @sms_provider %>'
+SMS_DOMAIN_ID = '<%= @sms_domain_id %>'
+SMS_LOGIN = '<%= @sms_login %>'
+SMS_PASSWORD = '<%= @sms_password %>'
+SMS_SENDER_ID = '<%= @sms_sender_id %>'

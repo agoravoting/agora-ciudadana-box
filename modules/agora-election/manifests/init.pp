@@ -22,20 +22,11 @@ class agora-election {
 	exec { "apt-get update":		
 	} ->
 	
-	package { ['python3.3', 'python3.3-dev', 'python3-setuptools', 'postgresql', 'postgresql-server-dev-all', 'virtualenvwrapper', 'libmemcached-dev', 'supervisor', 'rabbitmq-server']:
+	package { ['python3.3', 'python3.3-dev', 'python3-setuptools']:
         ensure => present
     } ->
 	
     # --- database -----------------------------------------------------------
-
-    # already done in agora
-	# workaround for http://projects.puppetlabs.com/issues/4695
-    # when PostgreSQL is installed with SQL_ASCII encoding instead of UTF8
-    # exec { 'utf8 postgres':
-    #    command => 'pg_dropcluster --stop 9.1 main ; pg_createcluster --start --locale en_US.UTF-8 9.1 main',
-    #    user    => 'postgres',
-    #    unless  => 'psql -t -c "\l" | grep template1 | grep -q UTF',
-    #} ->
 
     file { '/tmp/aelection_db_setup.sh':
         ensure  => file,
@@ -50,20 +41,6 @@ class agora-election {
 		require => Package['postgresql']
     } ->
 
-    # -- ssl certificate -----------------------------------------------------
-
-    #file { '/tmp/generate_certs.sh':
-    #    ensure  => file,
-    #    mode    => 'a+x',
-    #    content => template('agora/generate_certs.sh.erb'),
-    #} ->
-
-    #exec { '/tmp/generate_certs.sh':
-    #    user      => 'agora',
-    #    logoutput => true,
-    #    timeout   => 100,
-    #} ->
-
     # --- aelection configuration installation ------------------------------------
 	
 	exec { 'append_virtualenvwrapper_in_profile_aelection':
@@ -72,10 +49,24 @@ class agora-election {
         unless  => "grep 'virtualenvwrapper' -- /home/aelection/.profile"
     } ->
 	
-	file { '/home/aelection/settings.py':
+	file { '/home/aelection/custom_settings.py':
         ensure  => file,
         owner   => 'aelection',
         content => template('agora-election/aelection_settings.py.erb'),
+    } ->
+
+    file { '/home/aelection/faq.json':
+        ensure  => file,
+        owner   => 'aelection',
+        mode    => 'a+x',
+        content => template('agora-election/faq.json.erb'),
+    } ->
+
+    file { '/home/aelection/election.json':
+        ensure  => file,
+        owner   => 'aelection',
+        mode    => 'a+x',
+        content => template('agora-election/election.json.erb'),
     } ->
 	
 	file { '/tmp/aelection_setup.sh':
@@ -102,48 +93,17 @@ class agora-election {
 
     # --- services files -----------------------------------------------------
 
-    #file {'/etc/nginx/nginx.conf':
-    #    ensure  => file,
-    #    owner   => 'agora',
-    #    content => template('agora/nginx.conf.erb'),
-    #    notify  => Service['nginx'],
-    #    require => Package['nginx'],
-    #} ->
-
-    #file {'/etc/nginx/conf.d/agora.conf':
-    #    ensure  => file,
-    #    content => template('agora/nginx_agora.conf.erb'),
-    #    notify  => Service['nginx'],
-    #} ->
-
     file {'/etc/supervisor/conf.d/aelection.conf':
         ensure  => file,
         content => template('agora-election/supervisor_aelection.conf.erb'),
+        require => Package['supervisor'],
         notify  => Service['supervisor', 'rabbitmq-server', 'postgresql'],
     } ->
 
     file {'/etc/supervisor/conf.d/aelection-celery.conf':
         ensure  => file,
+        require => Package['supervisor'],
         content => template('agora-election/supervisor_aelection_celery.conf.erb'),
         notify  => Service['supervisor'],
-    }
-	
-	# --- services -----------------------------------------------------------
-	
-	service { 'rabbitmq-server':
-        ensure => running,
-        enable => true,
-    } ->
-	
-	service { 'postgresql':
-        ensure   => running,
-        enable   => true,
-        restart  => 'service postgresql restart',
-    } ->
-	
-	service { 'supervisor':
-        ensure     => running,
-        enable     => true,
-        restart    => 'supervisorctl reload',
     }
 }

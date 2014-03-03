@@ -2,6 +2,11 @@ upstream agora-django {
     server unix:///home/agora/agora.sock;
 }
 
+upstream agora-election {
+    server unix:///home/aelection/aelection.sock;
+}
+
+
 server {
     listen         80;
     server_name    <%= @agora_fqdn %>;
@@ -14,6 +19,8 @@ server {
     server_name    127.0.0.1;
     charset        utf-8;
     client_max_body_size 5M;
+    allow 127.0.0.1;
+    deny all;
 
     server_tokens  off;
 
@@ -26,8 +33,24 @@ server {
         alias /var/www/agora/static;
     }
 
+    <% if @enable_aelection == 'true' %>
+    location /static2 {
+        autoindex on;
+        alias /home/aelection/agora-election/agora_election/static;
+    }
+    <% end %>
+
     location / {
+        <% if @enable_aelection == 'false' %>
         uwsgi_pass  agora-django;
+        <% else %>
+            if ($request_filename ~ "(/vote|^api/v1/election/.*)$") {
+                uwsgi_pass  agora-django;
+            }
+            if ($request_filename !~ "(/vote|^api/v1/election/.*)$") {
+                uwsgi_pass  agora-election;
+            }
+        <% end %>
         include     /etc/nginx/uwsgi_params;
     }
 }
@@ -57,6 +80,11 @@ server {
     client_max_body_size 5M;
     server_tokens  off;
 
+    <% if @enable_agora_httpauth == 'true' %>
+    auth_basic            "Restricted";
+    auth_basic_user_file  /var/www/agora_httpauth;
+    <% end %>
+
     ssl_certificate /var/www/certs/agora/cert-ca-bundle.pem;
     ssl_certificate_key /var/www/certs/agora/key-nopass.pem;
     ssl_session_cache       builtin:1000  shared:SSL:10m;
@@ -74,6 +102,13 @@ server {
         autoindex on;
         alias /var/www/agora/static;
     }
+
+    <% if @enable_aelection == 'true' %>
+    location /static2 {
+        autoindex on;
+        alias /home/aelection/agora-election/agora_election/static;
+    }
+    <% end %>
 
     location / {
         <% if @enable_varnish == 'true' %>
@@ -95,6 +130,7 @@ server {
     }
 }
 
+<% if @enable_fnmt == 'true' %>
 server {
     listen      <%= @agora_ssl_port %> ssl;
     server_name <%= @fnmt_fqdn %>;
@@ -145,3 +181,4 @@ server {
         uwsgi_param X-Sender-SSL-Verify $ssl_client_verify;
     }
 }
+<% end %>

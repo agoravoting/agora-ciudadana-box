@@ -2,10 +2,11 @@
 
 HOME=/home/agora
 PIDFILE=$HOME/agora-celery.pid
+source $HOME/.profile
 
 ROOTD=$HOME/agora-ciudadana
 cd $ROOTD
-source $HOME/.virtualenvs/agora-ciudadana/bin/activate
+workon agora-ciudadana
 
 if [ -f $PIDFILE ]; then
     kill `cat -- $PIDFILE`

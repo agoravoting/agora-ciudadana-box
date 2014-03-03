@@ -40,5 +40,12 @@ echo '[{"pk": 1, "model": "sites.site", "fields": {"domain": "<%= @agora_fqdn %>
 ./manage.py loaddata site.json
 rm site.json
 
+<% if @enable_aelection == 'true' %>
+if [ ! -f /var/www/agora_httpauth ]
+then
+    crypt.pl /var/www/agora_httpauth "<%= @httpauth_user %>" "<%= @httpauth_password %>"
+fi
+<% end %>
+
 [ -f flatpages.json ] && ./manage.py loaddata flatpages.json
 exit 0

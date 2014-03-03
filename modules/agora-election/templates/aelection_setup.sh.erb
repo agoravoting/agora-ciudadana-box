@@ -10,10 +10,14 @@ cd $HOME
 
 [ ! -d $HOME/agora-election ] && (git clone https://github.com/agoraciudadana/agora-election.git)
 
+chmod +x $HOME/aelection_celery_launch.sh
+
 cd $HOME
 if [ ! -f  $HOME/agora-election/agora_election/settings.py ] || [ "<%= @overwrite_aelection_settings %>" == "true" ]
 then
-    mv $HOME/settings.py $HOME/agora-election/agora_election
+    mv $HOME/election.json $HOME/agora-election/agora_election/
+    mv $HOME/faq.json $HOME/agora-election/agora_election/
+    mv $HOME/custom_settings.py $HOME/agora-election/agora_election/custom_settings.py
 fi
 
 git config --global user.email "<%= @admin_email %>"
