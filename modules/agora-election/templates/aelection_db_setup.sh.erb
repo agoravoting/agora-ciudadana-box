@@ -1,0 +1,10 @@
+#!/bin/bash
+
+createuser -P aelection <<EOF
+<%= @db_aelection_password %>
+<%= @db_aelection_password %>
+n
+n
+n
+EOF
+createdb --template template0 -E utf-8 -O aelection aelection

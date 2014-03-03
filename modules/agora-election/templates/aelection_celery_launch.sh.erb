@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+HOME=/home/aelection
+PIDFILE=$HOME/aelection-celery.pid
+
+ROOTD=$HOME/agora-election
+cd $ROOTD
+workon agora-election
+
+if [ -f $PIDFILE ]; then
+    kill `cat -- $PIDFILE`
+    rm -f -- $PIDFILE
+fi
+
+# ps aux | grep "python ./manage.py celery worker --pidfile=/home/agora/agora-celery.pid -B -S djcelery.schedulers.DatabaseScheduler" | awk '{print $2}' | xargs kill -9
+
+celery -A app worker --loglevel=info --pidfile=$PIDFILE
+
+# ./manage.py celery worker --pidfile=$PIDFILE -B -S djcelery.schedulers.DatabaseScheduler

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# otherwise we get 'fatal: $HOME not set' when doing git config below
+export HOME=/home/aelection
+source $HOME/.profile
+
+cd $HOME
+
+[ ! -d $HOME/.virtualenvs/agora-election ] && mkvirtualenv agora-election -p $(which python3.3)
+
+[ ! -d $HOME/agora-election ] && (git clone https://github.com/agoraciudadana/agora-election.git)
+
+cd $HOME
+if [ ! -f  $HOME/agora-election/agora_election/settings.py ] || [ "<%= @overwrite_aelection_settings %>" == "true" ]
+then
+    mv $HOME/settings.py $HOME/agora-election/agora_election
+fi
+
+git config --global user.email "<%= @admin_email %>"
+git config --global user.name "<%= @admin_name %>"
+
+workon agora-election
+cd $HOME/agora-election
+git stash
+git pull --rebase
+git stash apply
+
+pip install -r requirements.txt
+
+cd agora_election
+./app.py --createdb

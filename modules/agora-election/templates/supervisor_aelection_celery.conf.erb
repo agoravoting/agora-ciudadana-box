@@ -1,0 +1,9 @@
+[program:aelection-celery]
+command=/home/agora/aelection_celery_launch.sh
+process_name=%(program_name)s
+directory=/home/aelection/
+autostart=true
+autorestart=true
+user=aelection
+redirect_stderr=true
+environment=PATH="/home/aelection/.virtualenvs/agora-election/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
