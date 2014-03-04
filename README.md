@@ -45,7 +45,11 @@ This is only needed if something went wrong or you want update the installation.
 
 Apply puppet manually in a fresh Debian 7.4 (with no apache installed!) with:
 
+* sudo aptitude install git-core
 * git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
 * cd agora-ciudadana-box
+
+Edit manifests/init.pp accordingly, then:
+
 * sudo sh shell/bootstrap.sh
 * sudo puppet apply manifests/init.pp --modulepath modules/

@@ -91,6 +91,26 @@ class agora-election {
         content => template('agora-election/aelection_celery_launch.sh.erb'),
     } ->
 
+    file { '/home/aelection/update.sh':
+        ensure  => file,
+        mode    => 'a+x',
+        owner   => 'aelection',
+        content => template('agora-election/aelection_update.sh.erb'),
+    } ->
+
+    file { '/home/aelection/start.sh':
+        ensure  => file,
+        mode    => 'a+x',
+        owner   => 'aelection',
+        content => template('agora-election/start.sh.erb'),
+    } ->
+
+    file { '/home/aelection/uwsgi.ini':
+        ensure  => file,
+        owner   => 'aelection',
+        content => template('agora-election/aelection_uwsgi.ini.erb'),
+    } ->
+
     # --- services files -----------------------------------------------------
 
     file {'/etc/supervisor/conf.d/aelection.conf':

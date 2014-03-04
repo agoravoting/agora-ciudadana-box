@@ -1,0 +1,14 @@
+[uwsgi]
+module=app:app_flask
+master=True
+uid=www-data
+workers=2
+threads=2
+gid=www-data
+pidfile=/home/aelection/aelection.pid
+vacuum=True
+chmod-socket=666
+max-requests=5000
+harakiri=30
+socket=/home/aelection/aelection.sock
+backtrace-depth=10

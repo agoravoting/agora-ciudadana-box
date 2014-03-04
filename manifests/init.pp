@@ -2,9 +2,11 @@
 $site_name = 'Agora Voting'
 $agora_fqdn = 'local.dev'
 $agora_ssl_port = '9443'
-$enable_fnmt = true
+$enable_fnmt = 'false'
 $fnmt_fqdn = 'fnmt.local.dev'
 $session_cookie_domain = '.local.dev'
+
+$public_ipaddress = '127.0.0.1'
 
 # if activated, it will overwrite agora settings if present
 $overwrite_agora_settings = 'true'
@@ -14,7 +16,7 @@ $agora_admin_username = 'agora'
 $agora_admin_password = 'some password'
 $agora_front_page = 'None'
 
-$enable_varnish = 'true'
+$enable_varnish = 'false'
 
 # email stuff (used in multiple places like agora and sentry..)
 
@@ -57,12 +59,12 @@ $backup_password = 'backup password'
 
 # aelection
 
-$enable_aelection = true
+$enable_aelection = 'true'
 
 # if activated, it will overwrite agora-election settings if present
 $overwrite_aelection_settings = 'true'
 
-$default_lang_code = 'en'
+$default_lang_code = 'es'
 
 $sms_provider = 'console'
 $sms_domain_id = 'comercial'
@@ -72,15 +74,15 @@ $sms_sender_id = ''
 
 # nginx security (TODO)
 
-$enable_agora_httpauth = false
+$enable_agora_httpauth = 'true'
 $httpauth_user = 'prueba'
-$httpauth_password = 'prueba'
+$httpauth_password = 'contraseña'
 
 require agora
 require sentry
 require backup
 
-if ($enable_aelection) {
+if ($enable_aelection == 'true') {
 require agora-election
 }
 

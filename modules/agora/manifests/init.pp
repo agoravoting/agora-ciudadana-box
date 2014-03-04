@@ -167,6 +167,13 @@ class agora() {
         content => template('agora/generate_certs.sh.erb'),
     } ->
 
+    file { '/usr/bin/eopeers':
+        ensure  => file,
+        owner   => 'root',
+        mode    => 'a+x',
+        content => template('agora/eopeers.erb'),
+    } ->
+
     exec { '/tmp/generate_certs.sh':
         user      => 'agora',
         logoutput => true,
@@ -233,7 +240,7 @@ class agora() {
         user      => 'agora',
         logoutput => true,
         creates   => '/home/agora/agora-ciudadana',
-        require => Package['virtualenvwrapper', 'libmemcached-dev'],
+        require => Package['virtualenvwrapper', 'libmemcached-dev', 'gettext'],
         timeout   => 3000,
     } ->
 
@@ -280,7 +287,6 @@ class agora() {
 
     file {'/etc/nginx/nginx.conf':
         ensure  => file,
-        owner   => 'nginx',
         content => template('agora/nginx.conf.erb'),
         notify  => Service['nginx'],
         require => Package['nginx'],

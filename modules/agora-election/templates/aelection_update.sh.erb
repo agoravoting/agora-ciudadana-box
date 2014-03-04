@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source /home/aelection/.profile
+workon agora-election
+cd agora-election
+
+git stash
+git pull
+git stash apply
+
+if [ ! -d /var/www/aelection/static ]
+then
+    mkdir -p /var/www/aelection/static
+fi
+
+cp -rf /home/aelection/agora-election/agora_election/static/* /var/www/aelection/static
+chown aelection:www-data /var/www/aelection/static
