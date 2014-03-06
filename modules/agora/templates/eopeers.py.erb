@@ -1,0 +1,141 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import json
+import shutil
+import subprocess
+import re
+
+from django.core.management import setup_environ
+from agora_site import settings
+setup_environ(settings)
+
+from agora_site.agora_core.models import *
+
+parser = argparse.ArgumentParser(prog='eopeers')
+parser.add_argument('--show-mine', help='show our peer package', action="store_true")
+parser.add_argument('--list', help='list authorities', action="store_true")
+parser.add_argument('--install', help='install authorities', nargs='+')
+parser.add_argument('--uninstall', nargs='+', help='uninstall authorities by hostname')
+parser.add_argument('--auth_port', help='authority url port', default=5000)
+
+pargs = parser.parse_args()
+
+
+def host_regex(hostname):
+    return "\n.* %s.*$" % hostname
+
+def install(path, port = 5000):
+    '''
+    install the peer package by path
+    '''
+
+    if not os.path.isfile(path):
+        print("Could not read file: %s" % path)
+        exit(1)
+    try:
+        with open(path, 'r') as f:
+            el_json = json.loads(f.read())
+        for key in ['ssl_certificate', 'ip_address', 'hostname']:
+            if (key not in el_json.keys()) or not isinstance(el_json[key], basestring):
+                print("invalid format package: %s" % path)
+                exit(1)
+    except:
+        print("error loading file: %s" % path)
+        import traceback
+        traceback.print_exc()
+        exit(1)
+
+    # check it's not already installed
+    bname = el_json['hostname']
+    authority = Authority.objects.filter(name=bname)
+
+    if len(authority) > 0:
+        print("authority %s already installed" % bname)
+        exit(1)
+
+    print("Installing authority %s " % el_json['hostname'])
+
+    # add to db
+    authority = Authority()
+    authority.name = el_json['hostname']
+    authority.ssl_certificate = el_json['ssl_certificate']
+    url = "https://%s:%s/api/queues" % (el_json['hostname'], port)
+    authority.description = "Specify the authority's description here"
+    authority.url = url
+    authority.public_url = url
+
+    authority.save()
+
+    # add to hosts if needed
+    with open("/etc/hosts", "r") as f:
+        hosts_data = f.read()
+
+    hostline = "\n%s %s" % (el_json['ip_address'], el_json["hostname"])
+    if hostline not in hosts_data:
+        subprocess.call("echo '%s' >> /etc/hosts" % hostline, shell=True)
+
+def uninstall(hostname):
+    '''
+    uninstall the peer package by hostname
+    '''
+    authority = Authority.objects.filter(name=hostname)
+    if not len(authority) == 1:
+        print("authority for hostname %s is not installed" % hostname)
+        exit(1)
+
+    print("Uninstalling authority %s " % hostname)
+    a = authority[0]
+    hostname = a.name
+    ssl_certificate = a.ssl_certificate
+
+    # remove from db
+    a.delete()
+
+    # remove hostname from hosts
+    with open('/etc/hosts', 'r') as f:
+        data = f.read()
+    result = re.sub(host_regex(hostname), "", data, flags=re.M)
+    with open('/etc/hosts', 'w') as f:
+        f.write(result)
+
+def showmine():
+    '''
+    show our peer data
+    '''
+    with open('/var/www/certs/agora/cert.pem', 'r') as f:
+        ssl_certificate =  f.read()
+    us = {
+        "ssl_certificate": ssl_certificate,
+        "ip_address": "127.0.0.1",
+        "hostname": "local.dev"
+    }
+    print(json.dumps(us))
+
+def listall():
+    '''
+    return list of authorities
+    '''
+    authorities = Authority.objects.all()
+
+    return authorities
+
+if pargs.show_mine:
+    showmine()
+elif pargs.list:
+    l = listall()
+    if len(l) == 0:
+        print("No authorities")
+        exit(0)
+    print("Listing authorities")
+    for el in l:
+        print(" * %s (%s, '%s')" % (el.name, el.public_url, el.description))
+elif pargs.install:
+    for path in pargs.install:
+        install(path, pargs.auth_port)
+elif pargs.uninstall:
+    for path in pargs.uninstall:
+        uninstall(path)
+else:
+    parser.print_help()

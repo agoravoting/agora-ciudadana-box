@@ -1,30 +1,13 @@
-#!/usr/bin/env python
+#!/bin/bash
 
-import argparse
-import os
-import json
-import shutil
-import subprocess
+if [ "$(whoami)" != "root" ]
+then
+    echo "You need to run this as root"
+fi
 
-peerlist = "/etc/eopeers"
+AGORA_DIR=/home/agora
+VENV_DIR=$AGORA_DIR/.virtualenvs/agora-ciudadana/
+source $VENV_DIR/bin/activate
 
-parser = argparse.ArgumentParser(prog='eopeers')
-parser.add_argument('--show-mine', help='show our peer package', action="store_true")
-
-pargs = parser.parse_args()
-
-def showmine():
-    '''
-    install the peer package by path
-    '''
-    with open('/home/aelection/agora-election/certs/cert.pem', 'r') as f:
-        ssl_certificate =  f.read()
-    us = {
-        "ssl_certificate": ssl_certificate,
-        "ip_address": "<%= @public_ipaddress %>",
-        "hostname": "<%= @agora_fqdn %>"
-    }
-    print(json.dumps(us))
-
-if pargs.show_mine:
-    showmine()
+export PYTHONPATH=$AGORA_DIR/agora-ciudadana
+/usr/bin/eopeers.py $*
