@@ -36,7 +36,7 @@ cp -r /var/log/rabbitmq $BACKUPD/logs/rabbitmq
 cp -r /var/log/nginx $BACKUPD/logs/nginx
 mkdir -p $BACKUPD/aelection
 cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/
-cp /home/agora/agora-ciudadana/certs/ $BACKUPD/agora_eo_certs
+cp -r /home/agora/agora-ciudadana/certs/ $BACKUPD/agora_eo_certs
 cp /home/aelection/agora-election/agora_election/custom_settings.py $BACKUPD/aelection/
 
 MANIFESTS_PATH=$(cat /root/.eo_puppet_manifests_path)
