@@ -23,7 +23,7 @@ rm tmp.tar.gz
 
 cd $BACKUPD
 
-supervisorctl stop agora agora-celery sentry aelection aelection-sentry
+supervisorctl stop agora agora-celery sentry aelection aelection-celery
 service nginx stop
 sudo -u postgres -H bash -l -c "dropdb agora; createdb -O agora agora; pg_restore -d agora agora.dump"
 sudo -u postgres -H bash -l -c "dropdb sentry; createdb -O sentry sentry; pg_restore -d sentry sentry.dump"
@@ -46,5 +46,5 @@ cp $BACKUPD/manifests_init.pp $MANIFESTS_PATH
 cd
 rm -rf $BACKUPD
 
-supervisorctl start agora agora-celery sentry aelection aelection-sentry
+supervisorctl start agora agora-celery sentry aelection aelection-celery
 service nginx start
