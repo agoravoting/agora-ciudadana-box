@@ -39,6 +39,9 @@ cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/
 cp /home/aelection/agora-election/certs/ $BACKUPD/agora_eo_certs
 cp /home/aelection/agora-election/agora_election/custom_settings.py $BACKUPD/aelection/
 
+MANIFESTS_PATH=$(cat /root/.eo_puppet_manifests_path)
+cp $MANIFESTS_PATH $BACKUPD/manifests_init.pp
+
 BACKUP="${BACKUP_DIR}/${DATE}.tar.gz"
 cd $(dirname $BACKUPD)
 tar zcf "${BACKUP_DIR}/${DATE}.tar.gz" $(basename $BACKUPD)

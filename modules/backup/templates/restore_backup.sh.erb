@@ -34,11 +34,12 @@ cp $BACKUPD/agora_custom_settings.py $AGORAD/agora-ciudadana/agora_site/custom_s
 cp $BACKUPD/agora_eo_certs/* $AGORAD/agora-ciudadana/certs/
 cp $BACKUPD/nginx_conf/* /etc/nginx/conf.d
 cp $BACKUPD/supervisor_confd/* /etc/supervisor/conf.d
-cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/
-cp /home/aelection/agora-election/agora_election/custom_settings.py $BACKUPD/aelection/
 
 cp $BACKUPD/aelection/*.json /home/aelection/agora-election/agora_election/
 cp $BACKUPD/aelection/custom_settings.py /home/aelection/agora-election/agora_election/
+
+MANIFESTS_PATH=$(cat /root/.eo_puppet_manifests_path)
+cp $BACKUPD/manifests_init.pp $MANIFESTS_PATH
 
 # we do not restore logs, that's just stored for analysis
 

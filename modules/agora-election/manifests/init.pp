@@ -48,6 +48,12 @@ class agora-election {
         user    => 'aelection',
         unless  => "grep 'virtualenvwrapper' -- /home/aelection/.profile"
     } ->
+
+    file {'/var/www/aelection/':
+        ensure  => directory,
+        owner   => 'aelection',
+        group   => 'www-data',
+    } ->
 	
 	file { '/home/aelection/custom_settings.py':
         ensure  => file,
