@@ -8,7 +8,7 @@ dpkg -i /tmp/puppetlabs-release-wheezy.deb
 rm /tmp/puppetlabs-release-wheezy.deb
 
 apt-get update
-apt-get install -y puppet aptitude realpath
+apt-get install -y puppet aptitude realpath sudo
 
 echo "saving path to manifests/init.pp so that backup script knows.."
 SCRIPT_PATH=$(readlink -f "$0")

@@ -35,7 +35,6 @@ pip install psycopg2 uwsgi
 [ -d /var/www/aelection/static ] && rm -rf /var/www/aelection/static
 mkdir -p /var/www/aelection/static
 cp -rf /home/aelection/agora-election/agora_election/static/* /var/www/aelection/static
-chown aelection:www-data -R /var/www/aelection/static
 
 cd agora_election
 ./app.py --createdb

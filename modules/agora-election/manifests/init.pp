@@ -90,6 +90,12 @@ class agora-election {
         timeout   => 3000,
     } ->
 
+    exec{'change_owner_aelection_static':
+        command   => 'chown aelection:www-data -R /var/www/aelection/static',
+        user      => 'root',
+        logoutput => true,
+    } ->
+
     file { '/home/aelection/aelection_celery_launch.sh':
         ensure  => file,
         owner   => 'aelection',
