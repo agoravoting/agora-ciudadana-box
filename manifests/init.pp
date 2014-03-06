@@ -60,6 +60,7 @@ $backup_password = 'backup password'
 # aelection
 
 $enable_aelection = 'true'
+$agora_backend_ssl_port = '9444'
 
 # if activated, it will overwrite agora-election settings if present
 $overwrite_aelection_settings = 'true'

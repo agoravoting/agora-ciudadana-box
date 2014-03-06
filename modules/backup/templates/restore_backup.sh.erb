@@ -31,6 +31,7 @@ sudo -u postgres -H bash -l -c "dropdb aelection; createdb -O aelection aelectio
 
 cp -r $BACKUPD/certs/* /var/www/certs/
 cp $BACKUPD/agora_custom_settings.py $AGORAD/agora-ciudadana/agora_site/custom_settings.py
+cp $BACKUPD/agora_eo_certs/* $AGORAD/agora-ciudadana/certs/
 cp $BACKUPD/nginx_conf/* /etc/nginx/conf.d
 cp $BACKUPD/supervisor_confd/* /etc/supervisor/conf.d
 cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/

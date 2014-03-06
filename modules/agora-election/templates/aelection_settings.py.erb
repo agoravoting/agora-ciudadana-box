@@ -2,6 +2,8 @@ import os
 import re
 import json
 import logging
+from kombu import Exchange, Queue
+
 ROOT_PATH = os.path.dirname(__file__)
 
 ########### agora-election
@@ -106,7 +108,10 @@ SESSION_COOKIE_SECURE = True
 
 USE_X_SENDFILE = False
 
-SERVER_NAME = '<%= @agora_fqdn %>:<%= @agora_ssl_port %>'
+if '<%= @agora_ssl_port %>' not in ['443', '80']:
+    SERVER_NAME = '<%= @agora_fqdn %>:<%= @agora_ssl_port %>'
+else:
+    SERVER_NAME = '<%= @agora_fqdn %>'
 
 SECRET_KEY = '<%= @aelection_secret_key %>'
 
@@ -124,7 +129,10 @@ CELERY_RESULT_BACKEND = 'amqp://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT=['json']
-CELERY_TIMEZONE = 'Europe/Madrid'
+CELERY_QUEUES  = "aelection"
+CELERY_QUEUES = (
+    Queue('aelection', Exchange('default'), routing_key='aelection'),
+)
 CELERY_ENABLE_UTC = True
 
 ########### sms provider

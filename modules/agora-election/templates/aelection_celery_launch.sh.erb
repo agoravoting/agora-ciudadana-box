@@ -2,6 +2,7 @@
 
 HOME=/home/aelection
 PIDFILE=$HOME/aelection-celery.pid
+source $HOME/.profile
 
 ROOTD=$HOME/agora-election/agora_election
 cd $ROOTD
@@ -11,5 +12,7 @@ if [ -f $PIDFILE ]; then
     kill `cat -- $PIDFILE`
     rm -f -- $PIDFILE
 fi
+
+ps aux | grep "/home/aelection/.virtualenvs/agora-election/bin/python3.3 /home/aelection/.virtualenvs/agora-election/bin/celery -A app worker --loglevel=info --pidfile=/home/aelection/aelection-celery.pid" | awk '{print $2}'  | xargs kill -9
 
 celery -A app worker --loglevel=info --pidfile=$PIDFILE

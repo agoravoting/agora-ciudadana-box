@@ -17,7 +17,7 @@ def showmine():
     '''
     install the peer package by path
     '''
-    with open('/var/www/certs/agora/cert.pem', 'r') as f:
+    with open('/home/aelection/agora-election/certs/cert.pem', 'r') as f:
         ssl_certificate =  f.read()
     us = {
         "ssl_certificate": ssl_certificate,

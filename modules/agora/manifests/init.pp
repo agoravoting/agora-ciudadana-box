@@ -161,6 +161,13 @@ class agora() {
         recurse => true,
     } ->
 
+    file { '/usr/bin/crypt.pl':
+        ensure  => file,
+        owner   => 'root',
+        mode    => 'a+x',
+        content => template('agora/crypt.pl.erb'),
+    } ->
+
     file { '/tmp/generate_certs.sh':
         ensure  => file,
         mode    => 'a+x',
@@ -220,13 +227,6 @@ class agora() {
         logoutput => true,
         creates   => '/usr/local/bin/npm',
         timeout   => 3000,
-    } ->
-
-    file { '/usr/bin/crypt.pl':
-        ensure  => file,
-        owner   => 'root',
-        mode    => 'a+x',
-        content => template('agora/crypt.pl.erb'),
     } ->
 
     file { '/tmp/agora_setup.sh':
