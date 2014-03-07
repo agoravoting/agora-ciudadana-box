@@ -38,6 +38,7 @@ mkdir -p $BACKUPD/aelection
 cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/
 cp -r /home/agora/agora-ciudadana/certs/ $BACKUPD/agora_eo_certs
 cp /home/aelection/agora-election/agora_election/custom_settings.py $BACKUPD/aelection/
+cp /etc/hosts $BACKUPD/etc_hosts
 
 MANIFESTS_PATH=$(cat /root/.eo_puppet_manifests_path)
 cp $MANIFESTS_PATH $BACKUPD/manifests_init.pp

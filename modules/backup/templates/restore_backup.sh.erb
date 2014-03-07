@@ -41,6 +41,8 @@ cp $BACKUPD/aelection/custom_settings.py /home/aelection/agora-election/agora_el
 MANIFESTS_PATH=$(cat /root/.eo_puppet_manifests_path)
 cp $BACKUPD/manifests_init.pp $MANIFESTS_PATH
 
+cp $BACKUPD/etc_hosts /etc/hosts
+
 # we do not restore logs, that's just stored for analysis
 
 cd
