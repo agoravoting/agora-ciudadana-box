@@ -54,7 +54,7 @@ rm site.json
 
 [ -f flatpages.json ] && ./manage.py loaddata flatpages.json
 
-./manage createsuperuser <<EOF
+./manage.py createsuperuser <<EOF
 <%= @agora_admin_username %>
 <%= @admin_email %>
 <%= @agora_admin_password %>
