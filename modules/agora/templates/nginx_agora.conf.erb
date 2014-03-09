@@ -147,7 +147,7 @@ server {
                 uwsgi_param X-Scheme $scheme;
             }
         <% else %>
-            location ~ (/vote|gettext/|api/v1/election/[0-9]+/action/|/api/v1/update/.*)$ {
+            location ~ (/vote|gettext/|api/v1/election/[0-9]+/(action|all_votes)/|/api/v1/update/.*)$ {
                 uwsgi_pass  agora-django;
 
                 include     /etc/nginx/uwsgi_params;
