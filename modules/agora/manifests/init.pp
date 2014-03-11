@@ -169,7 +169,8 @@ class agora() {
     } ->
 
     file { '/tmp/generate_certs.sh':
-        ensure  => file,
+        owner => 'root',
+		ensure  => file,
         mode    => 'a+x',
         content => template('agora/generate_certs.sh.erb'),
     } ->
@@ -180,7 +181,7 @@ class agora() {
         mode    => 'a+x',
         content => template('agora/eopeers.erb'),
     } ->
-	
+
 	file { '/usr/bin/eopeers.py':
         ensure  => file,
         owner   => 'root',
@@ -189,7 +190,7 @@ class agora() {
     } ->
 
     exec { '/tmp/generate_certs.sh':
-        user      => 'agora',
+        user      => 'root',
         logoutput => true,
         timeout   => 100,
     } ->
