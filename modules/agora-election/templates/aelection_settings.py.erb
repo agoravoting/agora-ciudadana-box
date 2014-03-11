@@ -134,6 +134,7 @@ CELERY_QUEUES = (
     Queue('aelection', Exchange('default'), routing_key='aelection'),
 )
 CELERY_ENABLE_UTC = True
+CELERY_DEFAULT_QUEUE  = "aelection"
 
 ########### sms provider
 
