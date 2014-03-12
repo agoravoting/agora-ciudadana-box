@@ -209,9 +209,6 @@ server {
     }
 
     location / {
-        auth_basic            "Restricted";
-        auth_basic_user_file  /var/www/agora_httpauth;
-
         uwsgi_pass  agora-django;
         include     /etc/nginx/uwsgi_params;
 
