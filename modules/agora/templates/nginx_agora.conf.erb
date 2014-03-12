@@ -89,11 +89,6 @@ server {
 
     location /media  {
         alias /var/www/agora/media;
-
-        <% if @enable_agora_httpauth == 'true' %>
-        auth_basic            "Restricted";
-        auth_basic_user_file  /var/www/agora_httpauth;
-        <% end %>
     }
 
     location /static {
