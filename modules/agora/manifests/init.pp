@@ -325,6 +325,10 @@ class agora() {
         content => template('agora/fail2ban/nginx-limitreq.conf.erb'),
         require => Package['fail2ban'],
     } ->
+    file { '/etc/fail2ban/filter.d/w00tw00t.conf':
+        ensure  => file,
+        content => template('agora/fail2ban/w00tw00t.conf.erb'),
+    } ->
 
     file { '/etc/fail2ban/filter.d/nginx-http-auth.conf':
         ensure  => file,

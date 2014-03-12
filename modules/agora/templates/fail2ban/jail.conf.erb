@@ -115,6 +115,17 @@ filter = nginx-http-auth
 logpath = /var/log/nginx/error.log
 maxretry = 3
 
+[w00tw00t-scans]
+enabled  = true
+maxretry = 1
+port = all
+protocol = tcp
+bantime  = 86400
+filter = w00tw00t
+logpath = /var/log/nginx/access.log
+
+
+
 [dropbear]
 
 enabled  = false
