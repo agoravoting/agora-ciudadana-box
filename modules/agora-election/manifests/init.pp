@@ -22,7 +22,7 @@ class agora-election {
 	exec { "apt-get update":		
 	} ->
 	
-	package { ['python3.3', 'python3.3-dev', 'python3-setuptools']:
+	package { ['python3.3', 'python3.3-dev', 'python3-setuptools', 'flite']:
         ensure => present
     } ->
 	
