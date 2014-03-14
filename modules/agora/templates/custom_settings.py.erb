@@ -179,6 +179,10 @@ AGORA_TOKEN_NOTIFY_URL_AUTH = ('<%= @httpauth_user %>', '<%= @httpauth_password 
 
 <% end %>
 
+<% if @enable_varnish == 'true' %>
+ALLOWED_HOSTS.append('127.0.0.1')
+<% end %>
+
 STATIC_ROOT = "/var/www/agora/static"
 MEDIA_ROOT = "/var/www/agora/media"
 

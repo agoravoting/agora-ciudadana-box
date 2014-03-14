@@ -42,14 +42,15 @@ server {
         <% if @enable_aelection == 'false' %>
         uwsgi_pass  agora-django;
         <% else %>
-            if ($request_filename ~ "(/vote|^api/v1/election/.*)$") {
+            if ($request_filename ~ (/vote|gettext/|api/v1/election/[0-9]+/(action|all_votes)/|/api/v1/update/.*)$) {
                 uwsgi_pass  agora-django;
             }
-            if ($request_filename !~ "(/vote|^api/v1/election/.*)$") {
+            if ($request_filename !~ (/vote|gettext/|api/v1/election/[0-9]+/(action|all_votes)/|/api/v1/update/.*)$) {
                 uwsgi_pass  agora-election;
             }
         <% end %>
         include     /etc/nginx/uwsgi_params;
+        add_header Cache-Control "public, max-age=3600";
     }
 }
 <% end %>
@@ -89,10 +90,12 @@ server {
 
     location /media  {
         alias /var/www/agora/media;
+        add_header Cache-Control "public, max-age=86400";
     }
 
     location /static {
         alias /var/www/agora/static;
+        add_header Cache-Control "public, max-age=86400";
 
         <% if @enable_agora_httpauth == 'true' %>
         auth_basic            "Restricted";
@@ -103,6 +106,7 @@ server {
     <% if @enable_aelection == 'true' %>
     location /static2 {
         alias /var/www/aelection/static;
+        add_header Cache-Control "public, max-age=86400";
 
         <% if @enable_agora_httpauth == 'true' %>
             auth_basic            "Restricted";
@@ -111,65 +115,67 @@ server {
     }
     <% end %>
 
-    <% if @enable_varnish == 'true' %>
+    <% if @enable_aelection == 'false' %>
         location / {
             <% if @enable_agora_httpauth == 'true' %>
                 auth_basic            "Restricted";
                 auth_basic_user_file  /var/www/agora_httpauth;
             <% end %>
 
-            proxy_pass  http://127.0.0.1:6081;
-            proxy_set_header X-Forwarded-Host $host;
-            proxy_set_header X-Forwarded-Proto https;
-
             limit_req   zone=one  burst=3  nodelay;
+
+            <% if @enable_varnish == 'true' %>
+                uwsgi_pass  agora-django;
+                include     /etc/nginx/uwsgi_params;
+                uwsgi_param X-Forwarded-Host $host;
+                uwsgi_param X-Forwarded-Proto https;
+                uwsgi_param X-Scheme $scheme;
+            <% else %>
+                proxy_pass  http://127.0.0.1:6081;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Proto https;
+            <% end %>
         }
     <% else %>
-        <% if @enable_aelection == 'false' %>
-            location / {
-                uwsgi_pass  agora-django;
-                include     /etc/nginx/uwsgi_params;
+        location ~ (/vote|gettext/|api/v1/election/[0-9]+/(action|all_votes)/|/api/v1/update/.*)$ {
+            uwsgi_pass  agora-django;
 
-                <% if @enable_agora_httpauth == 'true' %>
-                    auth_basic            "Restricted";
-                    auth_basic_user_file  /var/www/agora_httpauth;
-                <% end %>
+            include     /etc/nginx/uwsgi_params;
 
-                limit_req   zone=one  burst=3  nodelay;
+            limit_req   zone=one  burst=3  nodelay;
 
+            <% if @enable_varnish == 'true' %>
                 uwsgi_param X-Forwarded-Host $host;
                 uwsgi_param X-Forwarded-Proto https;
                 uwsgi_param X-Scheme $scheme;
-            }
-        <% else %>
-            location ~ (/vote|gettext/|api/v1/election/[0-9]+/(action|all_votes)/|/api/v1/update/.*)$ {
-                uwsgi_pass  agora-django;
+            <% else %>
+                proxy_pass  http://127.0.0.1:6081;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Proto https;
+            <% end %>
+        }
+        location / {
 
-                include     /etc/nginx/uwsgi_params;
+            <% if @enable_agora_httpauth == 'true' %>
+                auth_basic            "Restricted";
+                auth_basic_user_file  /var/www/agora_httpauth;
+            <% end %>
 
-                limit_req   zone=one  burst=3  nodelay;
 
-                uwsgi_param X-Forwarded-Host $host;
-                uwsgi_param X-Forwarded-Proto https;
-                uwsgi_param X-Scheme $scheme;
-            }
-            location / {
+            limit_req   zone=one  burst=3  nodelay;
+
+            <% if @enable_varnish == 'true' %>
                 uwsgi_pass  agora-election;
-
-                <% if @enable_agora_httpauth == 'true' %>
-                    auth_basic            "Restricted";
-                    auth_basic_user_file  /var/www/agora_httpauth;
-                <% end %>
-
                 include     /etc/nginx/uwsgi_params;
-
-                limit_req   zone=one  burst=3  nodelay;
-
                 uwsgi_param X-Forwarded-Host $host;
                 uwsgi_param X-Forwarded-Proto https;
                 uwsgi_param X-Scheme $scheme;
-            }
-        <% end %>
+            <% else %>
+                proxy_pass  http://127.0.0.1:6081;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Proto https;
+            <% end %>
+        }
     <% end %>
 }
 
