@@ -54,6 +54,8 @@ SMS_TOKEN_EXPIRE_SECS = 60*10
 
 AGORA_SHARED_SECRET_KEY = '<%= @agora_auto_activation_secret %>'
 
+REGISTER_SHOWS_CAPTCHA = False
+
 ########### data
 
 def get_json(fname):
@@ -65,6 +67,7 @@ AGORA_ELECTION_DATA = dict(
         name="www.podemos.info",
         url="//www.podemos.info",
     ),
+    register_shows_captcha=REGISTER_SHOWS_CAPTCHA,
     election=get_json('election.json'),
     faq_questions=get_json('faq.json'),
     subtitle="Una candidatura popular y ciudadana",
