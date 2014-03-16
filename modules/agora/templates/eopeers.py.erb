@@ -131,7 +131,7 @@ elif pargs.list:
         exit(0)
     print("Listing authorities")
     for el in l:
-        print(" * %s (%s, '%s')" % (el.name, el.public_url, el.description))
+        print(" * %s (%s, %s)" % (el.url.split("/")[2].split(":")[0], el.name, el.public_url))
 elif pargs.install:
     for path in pargs.install:
         install(path, pargs.auth_port)
