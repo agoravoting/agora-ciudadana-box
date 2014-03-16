@@ -64,6 +64,7 @@ def install(path, port = 5000):
     url = "https://%s:%s/api/queues" % (el_json['hostname'], port)
     authority.description = "Specify the authority's description here"
     authority.url = url
+    authority.is_active = True
     authority.public_url = url
 
     authority.save()
