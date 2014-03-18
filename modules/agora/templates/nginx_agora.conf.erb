@@ -125,15 +125,15 @@ server {
             limit_req   zone=one  burst=3  nodelay;
 
             <% if @enable_varnish == 'true' %>
+                proxy_pass  http://127.0.0.1:6081;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Proto https;
+            <% else %>
                 uwsgi_pass  agora-django;
                 include     /etc/nginx/uwsgi_params;
                 uwsgi_param X-Forwarded-Host $host;
                 uwsgi_param X-Forwarded-Proto https;
                 uwsgi_param X-Scheme $scheme;
-            <% else %>
-                proxy_pass  http://127.0.0.1:6081;
-                proxy_set_header X-Forwarded-Host $host;
-                proxy_set_header X-Forwarded-Proto https;
             <% end %>
         }
     <% else %>
@@ -145,13 +145,13 @@ server {
             limit_req   zone=one  burst=3  nodelay;
 
             <% if @enable_varnish == 'true' %>
-                uwsgi_param X-Forwarded-Host $host;
-                uwsgi_param X-Forwarded-Proto https;
-                uwsgi_param X-Scheme $scheme;
-            <% else %>
                 proxy_pass  http://127.0.0.1:6081;
                 proxy_set_header X-Forwarded-Host $host;
                 proxy_set_header X-Forwarded-Proto https;
+            <% else %>
+                uwsgi_param X-Forwarded-Host $host;
+                uwsgi_param X-Forwarded-Proto https;
+                uwsgi_param X-Scheme $scheme;
             <% end %>
         }
         location / {
@@ -165,15 +165,15 @@ server {
             limit_req   zone=one  burst=3  nodelay;
 
             <% if @enable_varnish == 'true' %>
+                proxy_pass  http://127.0.0.1:6081;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Proto https;
+            <% else %>
                 uwsgi_pass  agora-election;
                 include     /etc/nginx/uwsgi_params;
                 uwsgi_param X-Forwarded-Host $host;
                 uwsgi_param X-Forwarded-Proto https;
                 uwsgi_param X-Scheme $scheme;
-            <% else %>
-                proxy_pass  http://127.0.0.1:6081;
-                proxy_set_header X-Forwarded-Host $host;
-                proxy_set_header X-Forwarded-Proto https;
             <% end %>
         }
     <% end %>
