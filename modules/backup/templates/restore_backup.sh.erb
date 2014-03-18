@@ -36,6 +36,7 @@ cp $BACKUPD/nginx_conf/* /etc/nginx/conf.d
 cp $BACKUPD/supervisor_confd/* /etc/supervisor/conf.d
 
 cp $BACKUPD/aelection/*.json /home/aelection/agora-election/agora_election/
+cp -r $BACKUPD/aelection_static_pages/* /home/aelection/agora-election/agora_election/static/pages/
 cp $BACKUPD/aelection/custom_settings.py /home/aelection/agora-election/agora_election/
 
 MANIFESTS_PATH=$(cat /root/.eo_puppet_manifests_path)

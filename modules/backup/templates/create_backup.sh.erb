@@ -36,6 +36,7 @@ cp -r /var/log/rabbitmq $BACKUPD/logs/rabbitmq
 cp -r /var/log/nginx $BACKUPD/logs/nginx
 mkdir -p $BACKUPD/aelection
 cp /home/aelection/agora-election/agora_election/*.json $BACKUPD/aelection/
+cp -r /home/aelection/agora-election/agora_election/static/pages/ $BACKUPD/aelection_static_pages/
 cp -r /home/agora/agora-ciudadana/certs/ $BACKUPD/agora_eo_certs
 cp /home/aelection/agora-election/agora_election/custom_settings.py $BACKUPD/aelection/
 cp /etc/hosts $BACKUPD/etc_hosts
