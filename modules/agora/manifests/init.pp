@@ -195,7 +195,7 @@ class agora() {
         timeout   => 100,
     } ->
 
-    # --- agora configuration nstallation ------------------------------------
+    # --- agora configuration installation ------------------------------------
 
     exec { 'append_virtualenvwrapper_in_profile':
         command => "echo 'source /etc/bash_completion.d/virtualenvwrapper' >> /home/agora/.profile",
@@ -250,6 +250,11 @@ class agora() {
         creates   => '/home/agora/agora-ciudadana',
         require => Package['virtualenvwrapper', 'libmemcached-dev', 'gettext'],
         timeout   => 3000,
+    } ->
+
+    exec { 'ulimit -n 10000':
+        logoutput => true,
+        timeout   => 1,
     } ->
 
     file { '/home/agora/update.sh':
