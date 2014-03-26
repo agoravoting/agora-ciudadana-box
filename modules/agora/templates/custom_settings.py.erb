@@ -24,9 +24,9 @@ CELERY_ALWAYS_EAGER = False
 
 ###### for varnish
 
-USE_ESI = True
-
 <% if @enable_varnish == 'true' %>
+
+USE_ESI = True
 
 # sets default value for max age in cache
 CACHE_MIDDLEWARE_SECONDS = 60
@@ -38,6 +38,8 @@ MANY_CACHE_SECONDS = 10
 FEW_CACHE_SECONDS = 5
 
 <% else %>
+
+USE_ESI = False
 
 CACHE_MIDDLEWARE_SECONDS = 0
 MANY_CACHE_SECONDS = 0

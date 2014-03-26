@@ -4,6 +4,11 @@ backend default {
 }
 
 sub vcl_recv {
+        # add client ip
+        if (!req.http.X-Forwarded-For) {
+                set req.http.X-Forwarded-For = client.ip;
+        }
+
         # pass mode can't handle POST (yet)
         if (req.request == "POST") {
                 return(pipe);

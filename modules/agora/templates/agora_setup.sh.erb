@@ -8,6 +8,7 @@ cd $HOME
 
 if [ ! -d $HOME/agora-ciudadana ]
 then
+    git config --global http.sslVerify false
     git clone https://github.com/agoraciudadana/agora-ciudadana.git
     cd $HOME/agora-ciudadana
     echo "PWD = $(pwd)"

@@ -8,6 +8,7 @@ cd $HOME
 
 [ ! -d $HOME/.virtualenvs/agora-election ] && mkvirtualenv agora-election -p $(which python3.3)
 
+git config --global http.sslVerify false
 [ ! -d $HOME/agora-election ] && (git clone https://github.com/agoraciudadana/agora-election.git)
 
 chmod +x $HOME/aelection_celery_launch.sh
@@ -36,5 +37,5 @@ pip install psycopg2 uwsgi
 mkdir -p /var/www/aelection/static
 cp -rf /home/aelection/agora-election/agora_election/static/* /var/www/aelection/static
 
-cd agora_election
+cd $HOME/agora-election/agora_election
 ./app.py --createdb
