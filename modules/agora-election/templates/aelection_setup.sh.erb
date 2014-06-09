@@ -14,7 +14,7 @@ git config --global http.sslVerify false
 chmod +x $HOME/aelection_celery_launch.sh
 
 cd $HOME
-if [ ! -f  $HOME/agora-election/agora_election/settings.py ] || [ "<%= @overwrite_aelection_settings %>" == "true" ]
+if [ ! -f  $HOME/agora-election/agora_election/custom_settings.py ] || [ "<%= @overwrite_aelection_settings %>" == "true" ]
 then
     mv $HOME/election.json $HOME/agora-election/agora_election/
     mv $HOME/faq.json $HOME/agora-election/agora_election/
