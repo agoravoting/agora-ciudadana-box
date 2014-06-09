@@ -252,11 +252,6 @@ class agora() {
         timeout   => 3000,
     } ->
 
-    exec { 'ulimit -n 10000':
-        logoutput => true,
-        timeout   => 1,
-    } ->
-
     file { '/home/agora/update.sh':
         ensure  => file,
         mode    => 'a+x',

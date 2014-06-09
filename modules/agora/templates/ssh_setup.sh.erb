@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ulimit -n 10000
+
 # modify ssh config and restart ssh if needed
 grep 'PasswordAuthentication no' -- /etc/ssh/sshd_config || echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config && service ssh restart
 
