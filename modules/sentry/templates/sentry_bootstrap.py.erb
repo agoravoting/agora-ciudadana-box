@@ -30,4 +30,4 @@ project.save()
 key = ProjectKey.objects.filter(project=project)[0]
 
 with open('/tmp/raven_config', 'w') as f:
-    f.write('RAVEN_CONFIG = {"dsn": "%s"}\n' % key.get_dsn())
+    f.write('RAVEN_CONFIG = {"dsn": "%s?verify_ssl=0"}\n' % key.get_dsn())
