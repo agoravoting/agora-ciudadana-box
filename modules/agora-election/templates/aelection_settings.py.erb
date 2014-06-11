@@ -30,7 +30,8 @@ SMS_CHECKS_PIPELINE = (
     ("checks.check_has_not_voted", None),
     ("checks.check_tlf_whitelisted", None),
     ("checks.check_ip_whitelisted", None),
-    ("checks.check_blacklisted", None),
+    ("checks.check_ip_blacklisted", None),
+    ("checks.check_tlf_blacklisted", None),
     ("checks.check_ip_total_max", dict(total_max=8)),
     ("checks.check_tlf_total_max", dict(total_max=7)),
     ("checks.check_tlf_day_max", dict(day_max=5)),
@@ -54,8 +55,6 @@ SMS_TOKEN_EXPIRE_SECS = 60*10
 
 AGORA_SHARED_SECRET_KEY = '<%= @agora_auto_activation_secret %>'
 
-REGISTER_SHOWS_CAPTCHA = False
-
 ########### data
 
 STATIC_PAGES = [
@@ -78,6 +77,23 @@ STATIC_PAGES = [
 
 AGORA_ELECTION_DATA_URL = 'https://<%= @agora_fqdn %>/api/v1/election/2/'
 
+# AUTH_METHOD posibilities:
+# - "sms"
+# - "id-num"
+# - "id-photo"
+AUTH_METHOD = "sms"
+
+# in years
+MIN_AGE = "16"
+
+SHOW_CHECK_RECEIVE_UPDATES = False
+
+SHOW_POSTAL_CODE = False
+
+SHOW_EMAIL = False
+
+REGISTER_SHOWS_CAPTCHA = False
+
 AGORA_ELECTION_DATA = dict(
     parent_site=dict(
         name="www.podemos.info",
@@ -99,7 +115,13 @@ AGORA_ELECTION_DATA = dict(
     tos=dict(
         title="He leído y acepto las condiciones",
         text="De acuerdo con lo dispuesto en la Ley Orgánica 15/1999, de 13 de diciembre, de protección de datos de carácter personal, informamos que los datos personales recogidos aquí serán incorporados a un fichero titularidad de la Asociación por la Participación Social y Cultural con CIF G8693671 creada para esta la gestión administrativa de esta iniciativa. El fichero está inscrito en el Registro General de la Agencia Española de Protección de Datos. Mediante el envío del formulario existente en esta página web, el/la remitente presta su consentimiento al tratamiento automatizado de los datos incluidos en el mismo. Nos comprometemos asimismo al uso responsable y confidencial de los datos, garantizando que los datos de las/los usuarios se tratarán de acuerdo con las exigencias legales. En ningún caso los datos facilitados serán objeto de venta ni cesión a terceros. Podrá ejercitar los derechos de acceso, rectificación, cancelación y oposición establecidos en dicha Ley a través de correo electrónica, adjuntando fotocopia de su DNI/Pasaporte, en la siguiente dirección: participasocialcultural@gmail.com"
-    )
+    ),
+    auth_method=AUTH_METHOD,
+    min_age=MIN_AGE,
+    show_email=SHOW_EMAIL,
+    show_check_receive_updates=SHOW_CHECK_RECEIVE_UPDATES,
+    show_postal_code=SHOW_POSTAL_CODE,
+    register_shows_captcha=REGISTER_SHOWS_CAPTCHA,
 )
 
 ########### flask
