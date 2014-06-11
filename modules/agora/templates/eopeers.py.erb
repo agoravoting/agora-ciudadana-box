@@ -105,12 +105,12 @@ def showmine():
     '''
     show our peer data
     '''
-    with open('/var/www/certs/agora/cert.pem', 'r') as f:
+    with open('/home/agora/agora-ciudadana/certs/cert.pem', 'r') as f:
         ssl_certificate =  f.read()
     us = {
         "ssl_certificate": ssl_certificate,
-        "ip_address": "127.0.0.1",
-        "hostname": "local.dev"
+        "ip_address": "<%= @public_ipaddress %>",
+        "hostname": "<%= @agora_fqdn %>"
     }
     print(json.dumps(us))
 
