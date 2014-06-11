@@ -107,6 +107,12 @@ class sentry() {
         unless    => 'grep RAVEN_CONFIG -- /home/agora/agora-ciudadana/agora_site/custom_settings.py'
     } ->
 
+    exec { "raven_config_update_aelection":
+        command   => 'cat /tmp/raven_config_aelection >> /home/aelection/agora-election/agora_election/custom_settings.py; rm /tmp/raven_config_aelection',
+        user      => 'root',
+        unless    => 'grep SENTRY_DSN -- /home/aelection/agora-election/agora_election/custom_settings.py'
+    } ->
+
     file { '/home/sentry/uwsgi.ini':
         ensure  => file,
         owner   => 'sentry',
