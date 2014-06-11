@@ -53,3 +53,23 @@ Edit manifests/init.pp accordingly, then:
 
 * sudo sh shell/bootstrap.sh
 * sudo puppet apply manifests/init.pp --modulepath modules/
+
+### Troubleshooting
+
+If you get the following error during provisioning:
+
+Failed to mount folders in Linux guest. This is usually because
+the "vboxsf" file system is not available. Please verify that
+the guest additions are properly installed in the guest and
+can work properly....
+
+You need to
+
+* vagrant ssh
+* sudo ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
+
+back on the host
+
+* vagrant reload
+
+This has been seen on virtualbox 4.3.10. See https://github.com/mitchellh/vagrant/issues/3341
