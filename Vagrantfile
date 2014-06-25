@@ -9,7 +9,7 @@ Vagrant.configure('2') do |config|
 
     config.vm.provision :shell, :path => "shell/bootstrap.sh"
 
-    config.vm.provision :puppet , :module_path => "modules" , :options => "--verbose" do |puppet|
+    config.vm.provision :puppet , :module_path => "modules" , :options => "--verbose --logdest /tmp/puppet.log" do |puppet|
         puppet.manifests_path = "manifests"
         puppet.manifest_file = "init.pp"
     end

@@ -3,7 +3,8 @@
 HOME=/home/aelection
 source $HOME/.profile
 
-workon agora-election
+# workon agora-election
+source $HOME/.virtualenvs/agora-election/bin/activate
 cd $HOME/agora-election/agora_election
 ps aux | grep "uwsgi --ini /home/aelection/uwsgi.ini" | awk '{print $2}' | xargs kill -9
 uwsgi --ini $HOME/uwsgi.ini

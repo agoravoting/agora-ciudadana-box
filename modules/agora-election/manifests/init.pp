@@ -1,5 +1,5 @@
 class agora-election {
-	
+
 	Exec {
         path => ['/usr/sbin', '/usr/bin', '/usr/local/bin', '/sbin', '/bin']
     }
@@ -13,19 +13,20 @@ class agora-election {
         shell      => '/bin/bash'
     } ->
 
-	
+
 	# --- packages -----------------------------------------------------------
-	exec { "/bin/echo 'deb http://http.us.debian.org/debian testing main contrib non-free' >> /etc/apt/sources.list":
-		unless => "grep 'deb http://http.us.debian.org/debian testing main contrib non-free' /etc/apt/sources.list 2>/dev/null"
-	} ->
-	
-	exec { "apt-get update":		
-	} ->
-	
-	package { ['python3.3', 'python3.3-dev', 'python3-setuptools', 'flite']:
+	# exec { "/bin/echo 'deb http://http.us.debian.org/debian testing main contrib non-free' >> /etc/apt/sources.list":
+	#	unless => "grep 'deb http://http.us.debian.org/debian testing main contrib non-free' /etc/apt/sources.list 2>/dev/null"
+	#} ->
+
+	#exec { "apt-get update":
+	#} ->
+
+	# package { ['python3.3', 'python3.3-dev', 'python3-setuptools', 'flite']:
+    package { ['flite']:
         ensure => present
     } ->
-	
+
     # --- database -----------------------------------------------------------
 
     file { '/tmp/aelection_db_setup.sh':
@@ -42,7 +43,7 @@ class agora-election {
     } ->
 
     # --- aelection configuration installation ------------------------------------
-	
+
 	exec { 'append_virtualenvwrapper_in_profile_aelection':
         command => "echo 'source /etc/bash_completion.d/virtualenvwrapper' >> /home/aelection/.profile",
         user    => 'aelection',
@@ -54,7 +55,7 @@ class agora-election {
         owner   => 'aelection',
         group   => 'www-data',
     } ->
-	
+
 	file { '/home/aelection/custom_settings.py':
         ensure  => file,
         owner   => 'aelection',
@@ -74,7 +75,7 @@ class agora-election {
         mode    => 'a+x',
         content => template('agora-election/election.json.erb'),
     } ->
-	
+
 	file { '/tmp/aelection_setup.sh':
         ensure  => file,
         owner   => 'aelection',

@@ -6,7 +6,8 @@ source $HOME/.profile
 
 ROOTD=$HOME/agora-election/agora_election
 cd $ROOTD
-workon agora-election
+# workon agora-election
+source $HOME/.virtualenvs/agora-election/bin/activate
 
 if [ -f $PIDFILE ]; then
     kill `cat -- $PIDFILE`

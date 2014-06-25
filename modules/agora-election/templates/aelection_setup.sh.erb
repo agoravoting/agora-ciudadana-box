@@ -6,7 +6,7 @@ source $HOME/.profile
 
 cd $HOME
 
-[ ! -d $HOME/.virtualenvs/agora-election ] && mkvirtualenv agora-election -p $(which python3.3)
+[ ! -d $HOME/.virtualenvs/agora-election ] && /opt/python3.3/bin/pyvenv-3.3  /home/aelection/.virtualenvs/agora-election/
 
 git config --global http.sslVerify false
 [ ! -d $HOME/agora-election ] && (git clone https://github.com/agoraciudadana/agora-election.git)
@@ -14,17 +14,20 @@ git config --global http.sslVerify false
 chmod +x $HOME/aelection_celery_launch.sh
 
 cd $HOME
-if [ ! -f  $HOME/agora-election/agora_election/custom_settings.py ] || [ "<%= @overwrite_aelection_settings %>" == "true" ]
+if [ ! -f  $HOME/agora-election/agora_election/custom_settings.py ] || [ "true" == "true" ]
 then
     mv $HOME/election.json $HOME/agora-election/agora_election/
     mv $HOME/faq.json $HOME/agora-election/agora_election/
     mv $HOME/custom_settings.py $HOME/agora-election/agora_election/custom_settings.py
 fi
 
-git config --global user.email "<%= @admin_email %>"
-git config --global user.name "<%= @admin_name %>"
+git config --global user.email "bob@local.dev"
+git config --global user.name "Bob Esponja"
 
-workon agora-election
+source $HOME/.virtualenvs/agora-election/bin/activate
+[ ! -e $HOME/.virtualenvs/agora-election/bin/easy_install ] && wget https://bootstrap.pypa.io/ez_setup.py -O - | python
+[ ! -e $HOME/.virtualenvs/agora-election/bin/pip ] && easy_install pip
+
 cd $HOME/agora-election
 git stash
 git pull --rebase
