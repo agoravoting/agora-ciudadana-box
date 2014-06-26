@@ -24,7 +24,7 @@ ln -s /opt/python3.3/bin/python3.3 /usr/bin/python3.3
 wget https://bootstrap.pypa.io/ez_setup.py -O - | python3.3
 
 echo "Saving path to manifests/init.pp so that backup script knows.."
-SCRIPT_PATH=$(readlink -f "$0")
+SCRIPT_PATH=$(realpath "$0")
 INIT_PATH=$(dirname $SCRIPT_PATH)/../manifests/init.pp
 INIT_PATH=$(realpath $INIT_PATH)
 
