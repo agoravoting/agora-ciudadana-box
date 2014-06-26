@@ -34,7 +34,7 @@ $overwrite_agora_settings = 'true'
 
 # Agora ciudadana port (use of 9443 to not clash with 443 used for agora
 # election in a combined setup)
-$agora_ssl_port = '9443'
+$agora_ssl_port = '443'
 
 # Agoras array into which users will be automatically joined
 # eg "'edulix/agora_one','edulix/agora_two'"
