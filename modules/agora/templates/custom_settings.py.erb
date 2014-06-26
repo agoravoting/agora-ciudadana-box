@@ -166,19 +166,10 @@ AGORA_REQUEST_SCANNED_ID_ON_REGISTER = True
 
 AGORA_FRONT_PAGE = <%= @agora_front_page %>
 
-if '<%= @agora_ssl_port %>' not in ['443', '80']:
-    ALLOWED_HOSTS = ['<%= @agora_fqdn %>:<%= @agora_ssl_port %>',
-                     '<%= @fnmt_fqdn %>:<%= @agora_ssl_port %>']
-else:
-    ALLOWED_HOSTS = ['<%= @agora_fqdn %>', '<%= @fnmt_fqdn %>']
-
-<% if @enable_aelection == 'false' %>
-ALLOWED_HOSTS.append('<%= @agora_fqdn %>:<%= @agora_backend_ssl_port %>')
+ALLOWED_HOSTS = ['<%= @agora_fqdn %>', '<%= @fnmt_fqdn %>']
 
 <% if @enable_agora_httpauth == 'true' %>
 AGORA_TOKEN_NOTIFY_URL_AUTH = ('<%= @httpauth_user %>', '<%= @httpauth_password %>')
-<% end %>
-
 <% end %>
 
 <% if @enable_varnish == 'true' %>
