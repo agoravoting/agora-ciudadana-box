@@ -16,6 +16,12 @@ puppet+vagrant setup for agora-ciudadana deployment
 
 * vagrant plugin install vagrant-vbguest
 
+### Edit configuration
+
+It has some sane defaults that makes the deploy work by default, but you can
+edit the manifests/init.pp if you want. Take a look at the "Edit configuration"
+part of the "Standalone installation" process for more details.
+
 ### Run
 
 * vagrant up
@@ -33,7 +39,7 @@ and you will have the service available at `http://local.dev:9443/` directly on 
 ### Accessing the vm
 
 * vagrant ssh
-* sudo -s
+* su -
 
 ### Applying puppet manually inside the vm
 
@@ -45,14 +51,27 @@ This is only needed if something went wrong or you want update the installation.
 
 Apply puppet manually in a fresh Debian 7.4 (with no apache installed!) with:
 
-* sudo apt-get install -y git-core
-* git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
-* cd agora-ciudadana-box
+* # apt-get install -y git-core pwgen
+* # git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
+* # cd agora-ciudadana-box
 
-Edit manifests/init.pp accordingly, then:
+### Edit configuration
 
-* sudo sh shell/bootstrap.sh
-* sudo puppet apply manifests/init.pp --modulepath modules/
+It's now the time to edit manifests/init.pp. The variables are well documented,
+so please take a while to read the comments.
+
+You'll notice that the passwords are always marked as <PASSWORD>. You can
+automatically populate each password with a different value executing the
+following script:
+
+* # shell/set_passwords.sh manifests/init.pp
+
+### Execute deployment
+
+Just execute:
+
+* # sh shell/bootstrap.sh
+* # puppet apply manifests/init.pp --modulepath modules/
 
 ### Troubleshooting
 
