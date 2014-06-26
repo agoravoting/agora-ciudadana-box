@@ -75,7 +75,7 @@ Just execute:
 
 ### Troubleshooting
 
-If you get the following error during provisioning:
+## If you get the following error during provisioning:
 
 Failed to mount folders in Linux guest. This is usually because
 the "vboxsf" file system is not available. Please verify that
@@ -92,3 +92,15 @@ back on the host
 * vagrant reload
 
 This has been seen on virtualbox 4.3.10. See https://github.com/mitchellh/vagrant/issues/3341
+
+## If you get the following error during provisioning:
+
+Error: /etc/apt/sources.list contains a cdrom source; not installing.  Use 'allowcdrom' to override this failure.
+
+You need to
+
+* vi /etc/apt/sources.list
+
+Comment out entries beginning with "deb cdrom:..."
+
+Save and retry puppet provisioning
