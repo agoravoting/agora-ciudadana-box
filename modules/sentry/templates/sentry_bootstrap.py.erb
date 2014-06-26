@@ -33,4 +33,4 @@ with open('/tmp/raven_config', 'w') as f:
     f.write('RAVEN_CONFIG = {"dsn": "%s?verify_ssl=0"}\n' % key.get_dsn())
 
 with open('/tmp/raven_config_aelection', 'w') as f:
-    f.write('SENTRY_DSN = {"dsn": "%s?verify_ssl=0"}\n' % key.get_dsn())
+    f.write('SENTRY_DSN = "%s?verify_ssl=0"\n' % key.get_dsn())
