@@ -8,7 +8,7 @@ dpkg -i /tmp/puppetlabs-release-wheezy.deb
 rm /tmp/puppetlabs-release-wheezy.deb
 
 apt-get update
-apt-get install -y puppet aptitude realpath sudo libssl-dev libbz2-dev pwgen
+apt-get install -y puppet aptitude realpath sudo libssl-dev libbz2-dev pwgen build-essential
 
 echo "Installing python 3.3.."
 wget -qO /tmp/Python-3.3.5.tar.xz http://www.python.org/ftp/python/3.3.5/Python-3.3.5.tar.xz

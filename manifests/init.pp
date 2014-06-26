@@ -83,7 +83,7 @@ $fnmt_fqdn = 'fnmt.local.dev'
 ##### Email stuff (used in multiple places like agora ciudadana agora
 # election and sentry..)
 
-# FROM field used when sending messages
+# FROM field used when sending messages (including contact form messages)
 $server_email = 'agora@local.dev'
 
 # email server
@@ -109,6 +109,8 @@ $sentry_db_password =  '<PASSWORD>'
 $sentry_username = 'admin'
 $sentry_userpass = '<PASSWORD>'
 
+# Needed by the eopeers showmine command
+$public_ipaddress = '127.0.0.1'
 
 ##### Backup
 
@@ -132,11 +134,19 @@ $overwrite_aelection_settings = 'true'
 # (https://pythonhosted.org/Flask-Babel/)
 $default_lang_code = 'es'
 
-# FIXME sms provider data
+
+# sms configuration data - assume esendex provider in comments
+# the provider, use 'esendex' to send real messages, 'console' shows traces
 $sms_provider = 'console'
+# corresponds to the accountreference esendex field (Cuenta)
+# (https://www.esendex.com/echo/a/EX0130074/Settings/General)
 $sms_domain_id = 'comercial'
+# login and password
 $sms_login = ''
 $sms_password = ''
+# corresponds to the from esendex field, if this field is empty
+# the value configured in the esendex config page will be used:
+# https://www.esendex.com/echo/a/EX0130074/Settings/Sending
 $sms_sender_id = ''
 
 # agora election postgresql database password
@@ -155,13 +165,6 @@ $enable_agora_httpauth = 'true'
 # user/passsword for httpauth
 $httpauth_user = 'prueba'
 $httpauth_password = '<PASSWORD>'
-
-
-##### Election orchestra
-
-# Needed by the eopeers showmine command
-$public_ipaddress = '127.0.0.1'
-
 
 
 
