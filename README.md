@@ -73,6 +73,10 @@ Just execute:
 * # sh shell/bootstrap.sh
 * # puppet apply manifests/init.pp --modulepath modules/
 
+If you want to log the output to a file use
+
+* # puppet apply manifests/init.pp --modulepath modules/ --logdest /tmp/puppet.log
+
 ### Troubleshooting
 
 ## If you get the following error during provisioning:
