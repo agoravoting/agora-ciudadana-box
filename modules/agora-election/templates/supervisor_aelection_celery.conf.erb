@@ -7,3 +7,6 @@ autorestart=true
 user=aelection
 redirect_stderr=true
 environment=PATH="/home/aelection/.virtualenvs/agora-election/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+; stopasgroup not yet supported in 3.0a8-1.1
+; http://stackoverflow.com/questions/9090683/supervisord-stopping-child-processes
+; stopasgroup=true
