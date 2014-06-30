@@ -13,6 +13,4 @@ if [ -f $PIDFILE ]; then
     rm -f -- $PIDFILE
 fi
 
-ps aux | grep "python ./manage.py celery worker --pidfile=/home/agora/agora-celery.pid -B -S djcelery.schedulers.DatabaseScheduler" | awk '{print $2}' | xargs kill -9
-
 ./manage.py celery worker --pidfile=$PIDFILE -B -S djcelery.schedulers.DatabaseScheduler
