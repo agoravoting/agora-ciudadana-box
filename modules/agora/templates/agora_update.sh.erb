@@ -7,9 +7,16 @@ cd agora-ciudadana
 git checkout agora_site/static/js/min/agora.min.js
 git checkout agora_site/static/js/min/main.min.js
 git checkout agora_site/static/less/agora.css
-git stash
-git pull
-git stash apply
+
+if [ "$(git diff | wc -l)" != "0" ]
+then
+    git stash
+    git pull
+    git stash apply
+else
+    git pull
+fi
+
 ./manage.py compilemessages
 ./manage.py migrate
 ./manage.py syncperms

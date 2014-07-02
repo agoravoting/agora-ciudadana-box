@@ -5,9 +5,14 @@ source /home/aelection/.profile
 source /home/aelection/.virtualenvs/agora-election/bin/activate
 cd agora-election
 
-git stash
-git pull
-git stash apply
+if [ "$(git diff | wc -l)" != "0" ]
+then
+    git stash
+    git pull
+    git stash apply
+else
+    git pull
+fi
 
 if [ ! -d /var/www/aelection/static ]
 then
