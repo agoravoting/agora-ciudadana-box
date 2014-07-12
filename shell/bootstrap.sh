@@ -25,7 +25,7 @@ ln -s /opt/python3.3/bin/python3.3 /usr/bin/python3.3
 rm /tmp/Python-3.3.5.tar.xz
 
 echo "Installing ez_setup.py.."
-wget -q0 /tmp/ez_setup.py https://bootstrap.pypa.io/ez_setup.py
+wget -qO /tmp/ez_setup.py https://bootstrap.pypa.io/ez_setup.py
 cd /tmp
 (md5sum ez_setup.py | grep 3568a316988ea5d6e6583cd4645e50d6) || (echo "invalid hash for ez_setup.py" && exit 1)
 python3.3 ez_setup.py
