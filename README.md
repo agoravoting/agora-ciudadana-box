@@ -28,7 +28,7 @@ part of the "Standalone installation" process for more details.
 
 Wait for the provisioning to finish
 
-If you want to use it as is with the default configuration (which only makes if it's a test or development machine, otherwise it's completely UNSAFE), you need to add the following lines to /etc/hosts (from root user):
+If you want to use it as is with the default configuration (which only makes if it's a test or development machine, otherwise it's completely UNSAFE), you need to add the following lines to /etc/hosts (from root user) on the host machine:
 
 * echo "127.0.0.1 local.dev" > /etc/hosts
 * echo "127.0.0.1 sentry.local.dev" > /etc/hosts
