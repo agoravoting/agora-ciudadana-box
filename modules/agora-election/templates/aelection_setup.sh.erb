@@ -9,7 +9,7 @@ cd $HOME
 [ ! -d $HOME/.virtualenvs/agora-election ] && /opt/python3.3/bin/pyvenv-3.3  /home/aelection/.virtualenvs/agora-election/
 
 git config --global http.sslVerify false
-[ ! -d $HOME/agora-election ] && (git clone https://github.com/agoraciudadana/agora-election.git)
+[ ! -d $HOME/agora-election ] && (git clone https://github.com/agoravoting/agora-election.git)
 
 cd $HOME
 if [ ! -f  $HOME/agora-election/agora_election/custom_settings.py ] || [ "<%= @overwrite_aelection_settings %>" == "true" ]

@@ -10,7 +10,7 @@ puppet+vagrant setup for agora-ciudadana deployment
 
 ### Download the repository
 
-* git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
+* git clone https://github.com/agoravoting/agora-ciudadana-box.git
 
 ### Install the vb-guest plugin
 
@@ -52,7 +52,7 @@ This is only needed if something went wrong or you want update the installation.
 Apply puppet manually in a fresh Debian 7.4 (with no apache installed!) with:
 
 * # apt-get install -y git-core pwgen
-* # git clone https://github.com/agoraciudadana/agora-ciudadana-box.git
+* # git clone https://github.com/agoravoting/agora-ciudadana-box.git
 * # cd agora-ciudadana-box
 
 ### Edit configuration
