@@ -22,7 +22,7 @@ class agora() {
     } ->
 
     exec { 'add_nginx_repo':
-        command => "echo 'deb http://nginx.org/packages/debian/ wheezy nginx' >> /etc/apt/sources.list; wget http://nginx.org/keys/nginx_signing.key; apt-key add nginx_signing.key; apt-get update",
+        command => "echo 'deb http://nginx.org/packages/ubuntu/ trusty nginx' >> /etc/apt/sources.list; wget http://nginx.org/keys/nginx_signing.key; apt-key add nginx_signing.key; apt-get update",
         unless  => "grep 'wheezy nginx' -- /etc/apt/sources.list"
     } ->
     package { 'nginx':
