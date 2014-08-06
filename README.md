@@ -49,7 +49,7 @@ This is only needed if something went wrong or you want update the installation.
 
 ## Standalone installation (no vagrant, only puppet)
 
-Apply puppet manually in a fresh Debian 7.4 (with no apache installed!) with:
+Apply puppet manually in a fresh Ubuntu 12.04 LTS (with no apache installed!) with:
 
 * # apt-get install -y git-core pwgen
 * # git clone https://github.com/agoravoting/agora-ciudadana-box.git
@@ -75,7 +75,7 @@ Just execute:
 
 If you want to log the output to a file use
 
-* # puppet apply manifests/init.pp --modulepath modules/ --logdest /tmp/puppet.log
+* # puppet apply manifests/init.pp --modulepath modules/ | tee /tmp/puppet.log
 
 ### Troubleshooting
 

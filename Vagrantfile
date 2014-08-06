@@ -1,8 +1,8 @@
 Vagrant.configure('2') do |config|
     config.vm.box = 'agoravoting-machine'
     config.vbguest.auto_update = true
-    config.vm.box_url = 'http://puppet-vagrant-boxes.puppetlabs.com/debian-73-x64-virtualbox-puppet.box'
-    config.vm.box_download_checksum = "33beeeef6f5b180f7cb86bb6bf7d8e8d29a849b051abddc029784eab68874d11"
+    config.vm.box_url = 'http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-10044-x64-vbox4210.box'
+    config.vm.box_download_checksum = "95ab449006216771a3816bf17e4cc24e2775c0e63c00797f6a20f81ceb4bb35e"
     config.vm.box_download_checksum_type = "sha256"
 
     config.vm.network 'forwarded_port', guest: 9443, host: 9443
