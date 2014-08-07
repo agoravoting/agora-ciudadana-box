@@ -3,7 +3,7 @@
 cd /tmp
 wget http://nodejs.org/dist/v0.10.30/node-v0.10.30.tar.gz
 sum=$(sha256sum node-v0.10.30.tar.gz)
-if [ ! "$sum" == "3dfcbd307f5f5f266ef174e1443107da853cd3d0aa0b2493a44235d5908625d2 node-v0.10.30.tar.gz" ]
+if [ ! "$sum" == "3dfcbd307f5f5f266ef174e1443107da853cd3d0aa0b2493a44235d5908625d2  node-v0.10.30.tar.gz" ]
 then
     echo "invalid node hash!"
     rm -rf node-v0.10.30.tar.gz
